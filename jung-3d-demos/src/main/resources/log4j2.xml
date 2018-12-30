@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="edu.uci.ics.jung.visualization3d.renderers" additivity="false" level="info">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="edu.uci.ics.jung.visualization.spatial" additivity="false" level="info">
+            <AppenderRef ref="Console"/>
+        </Logger>
+         <Logger name="edu.uci.ics.jung.visualization3d.VisualizationViewer" additivity="false" level="info">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="edu.uci.ics.jung.algorithms.layout3d" additivity="false" level="info">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="edu.uci.ics.jung.visualization3d.layout.util" additivity="false" level="info">
+            <AppenderRef ref="Console"/>
+        </Logger>
+
+
+        <Logger name="edu.uci.ics.jung.samples" additivity="false" level="info">
+            <AppenderRef ref="Console"/>
+        </Logger>
+
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>
