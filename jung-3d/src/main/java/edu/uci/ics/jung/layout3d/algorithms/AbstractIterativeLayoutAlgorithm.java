@@ -15,6 +15,36 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractIterativeLayoutAlgorithm<N> implements IterativeLayoutAlgorithm<N> {
 
   private static final Logger log = LoggerFactory.getLogger(AbstractIterativeLayoutAlgorithm.class);
+  public abstract static class Builder<
+          N, T extends AbstractIterativeLayoutAlgorithm<N>, B extends Builder<N, T, B>> {
+    protected Random random = new Random();
+    protected boolean shouldPrerelax = true;
+    protected int preRelaxDurationMs = 500;
+
+    public B setRandomSeed(long randomSeed) {
+      this.random = new Random(randomSeed);
+      return (B) this;
+    }
+
+    public B setShouldPrerelax(boolean shouldPrerelax) {
+      this.shouldPrerelax = shouldPrerelax;
+      return (B) this;
+    }
+
+    public B setPreRelaxDuration(int preRelaxDurationMs) {
+      this.preRelaxDurationMs = preRelaxDurationMs;
+      return (B) this;
+    }
+
+    public abstract T build();
+  }
+
+  protected AbstractIterativeLayoutAlgorithm(Builder builder) {
+    this.random = builder.random;
+    this.shouldPreRelax = builder.shouldPrerelax;
+    this.preRelaxDurationMs = builder.preRelaxDurationMs;
+  }
+
   /**
    * because the IterativeLayoutAlgorithms use multithreading to continuously update node positions,
    * the layoutModel state is saved (during the visit method) so that it can be used continuously

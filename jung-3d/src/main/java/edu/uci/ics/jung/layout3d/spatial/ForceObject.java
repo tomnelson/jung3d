@@ -51,10 +51,10 @@ public class ForceObject<T> {
    * implementation. See FRBHVisitorLayoutAlgorithm and SpringVisitorLayoutAlgorithm.
    *
    * @param other the ForceObject (a node or a force vector) to apply force from
-   * @param userData optional data to pass to the visitor method
+//   * @param userData optional data to pass to the visitor method
    * @param <S> the type of the userData
    */
-  protected <S> void addForceFrom(ForceObject<T> other, Optional userData) {
+  protected <S> void addForceFrom(ForceObject<T> other) {
     // no op
   }
 

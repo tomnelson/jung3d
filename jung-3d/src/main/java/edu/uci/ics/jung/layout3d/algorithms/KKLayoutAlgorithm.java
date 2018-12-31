@@ -67,12 +67,53 @@ public class KKLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N>
    */
   private float disconnected_multiplier = 0.5f;
 
-  public KKLayoutAlgorithm() {}
+  public static class Builder<N> extends AbstractIterativeLayoutAlgorithm.Builder {
+    protected Distance<N> distance;
+    protected int maxIterations = 2000;
+    protected boolean adjustForGravity = true;
+    protected boolean exchangeNodes = true;
 
-  public KKLayoutAlgorithm(Distance<N> distance) {
-    //    super(domainModel);
-    this.distance = (x, y) -> distance.getDistance(x, y);
+    public Builder<N> setDistance(Distance<N> distance) {
+      this.distance = distance;
+      return this;
+    }
+
+    public Builder<N> setMaxIterations(int maxIterations) {
+      this.maxIterations = maxIterations;
+      return this;
+    }
+
+    public Builder<N> setAdjustForGravity(boolean adjustForGravity) {
+      this.adjustForGravity = adjustForGravity;
+      return this;
+    }
+
+    public Builder<N> setExchangeNodes(boolean exchangeNodes) {
+      this.exchangeNodes = exchangeNodes;
+      return this;
+    }
+
+    public KKLayoutAlgorithm<N> build() {
+      return new KKLayoutAlgorithm(this);
+    }
   }
+
+  public static <N> Builder<N> builder() {
+    return new Builder();
+  }
+  protected KKLayoutAlgorithm(Builder<N> builder) {
+    super(builder);
+    this.distance = (x, y) -> builder.distance.getDistance(x, y);
+    this.maxIterations = builder.maxIterations;
+    this.adjustForGravity = builder.adjustForGravity;
+    this.exchangenodes = builder.exchangeNodes;
+  }
+//  public KKLayoutAlgorithm() {}
+//
+//  public KKLayoutAlgorithm(Distance<N> distance) {
+//        super(domainModel);
+//    this.distance = (x, y) -> distance.getDistance(x, y);
+//  }
 
   @Override
   public void visit(LayoutModel<N> layoutModel) {

@@ -4,6 +4,7 @@ import edu.uci.ics.jung.algorithms.util.IterativeContext;
 import edu.uci.ics.jung.layout3d.model.LayoutModel;
 import edu.uci.ics.jung.layout3d.model.LoadingCacheLayoutModel;
 import edu.uci.ics.jung.layout3d.model.Point;
+import edu.uci.ics.jung.visualization.VisualizationServer;
 import edu.uci.ics.jung.visualization3d.VisualizationViewer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +24,58 @@ public class AnimationLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorith
   LayoutAlgorithm<N> endLayoutAlgorithm;
   LayoutModel<N> layoutModel;
 
-  public AnimationLayoutAlgorithm(
-      VisualizationViewer<N, ?> visualizationServer, LayoutAlgorithm<N> endLayoutAlgorithm) {
-    this.visualizationServer = visualizationServer;
-    this.endLayoutAlgorithm = endLayoutAlgorithm;
-    this.shouldPreRelax = false;
+  public static class Builder<N> extends AbstractIterativeLayoutAlgorithm.Builder {
+
+    private VisualizationViewer<N,?> visualizationServer;
+    private LayoutAlgorithm<N> endLayoutAlgorithm;
+    private boolean shouldPrerelax = false;
+
+    public Builder setVisualizationServer(VisualizationViewer<N, ?> visualizationServer) {
+      this.visualizationServer = visualizationServer;
+      return this;
+    }
+
+    public Builder setEndLayoutAlgorithm(LayoutAlgorithm<N> endLayoutAlgorithm) {
+      this.endLayoutAlgorithm = endLayoutAlgorithm;
+      return this;
+    }
+
+    @Override
+    public Builder setShouldPrerelax(boolean shouldPrerelax) {
+      this.shouldPrerelax = shouldPrerelax;
+      return this;
+    }
+
+    public VisualizationViewer<N, ?> getVisualizationServer() {
+      return visualizationServer;
+    }
+
+    public LayoutAlgorithm<N> getEndLayoutAlgorithm() {
+      return endLayoutAlgorithm;
+    }
+
+    public AnimationLayoutAlgorithm<N> build() {
+      return new AnimationLayoutAlgorithm<>(this);
+    }
   }
+
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  protected AnimationLayoutAlgorithm(Builder builder) {
+    super(builder);
+    this.visualizationServer = builder.visualizationServer;
+    this.endLayoutAlgorithm = builder.endLayoutAlgorithm;
+    this.shouldPreRelax = builder.shouldPrerelax;
+  }
+
+//  public AnimationLayoutAlgorithm(
+//      VisualizationViewer<N, ?> visualizationServer, LayoutAlgorithm<N> endLayoutAlgorithm) {
+//    this.visualizationServer = visualizationServer;
+//    this.endLayoutAlgorithm = endLayoutAlgorithm;
+//    this.shouldPreRelax = false;
+//  }
 
   public void visit(LayoutModel<N> layoutModel) {
     // save off the existing layoutModel

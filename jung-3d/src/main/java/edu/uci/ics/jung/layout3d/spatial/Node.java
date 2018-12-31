@@ -1,6 +1,8 @@
 package edu.uci.ics.jung.layout3d.spatial;
 
 import java.util.Optional;
+
+import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +15,14 @@ import org.slf4j.LoggerFactory;
 public class Node<T> {
 
   private static final Logger log = LoggerFactory.getLogger(Node.class);
-  public static final double THETA = 0.5f;
+  /**
+   * threshold value for determining whether to use the forces in an inner node as a summary value,
+   * or to descend the quad tree to another inner node or leaf node. theta should be between 0 and
+   * 1, with 0.5 as a commonly selected value. Note that a theta value of 0 will result in no
+   * optimization in the BarnesHutOctTree and all force visitors will descend to a leaf node instead
+   * of using an inner node summary force vector.
+   */
+  public static final double DEFAULT_THETA = 0.5;
 
   // a node contains a ForceObject and possibly 8 Nodes
   protected ForceObject<T> forceObject;
@@ -27,10 +36,48 @@ public class Node<T> {
   Node FSE;
   Node FSW;
 
+  protected double theta = DEFAULT_THETA;
+
   private Box area;
 
-  public Node(double x, double y, double z, double width, double height, double depth) {
+  public static class Builder<T> {
+    protected double theta = DEFAULT_THETA;
+    protected Box volume;
+
+    public Node.Builder<T> setVolume(
+            double x, double y, double z, double width, double height, double depth) {
+      return setVolume(new Box(x, y, z, width, height, depth));
+    }
+
+    public Node.Builder<T> setVolume(Box volume) {
+      this.volume = volume;
+      return this;
+    }
+
+    public Node.Builder<T> setTheta(double theta) {
+      this.theta = theta;
+      return this;
+    }
+
+    public Node<T> build() {
+      return new Node(this);
+    }
+  }
+
+  public static <T> Builder<T> builder() {
+    return new Builder<>();
+  }
+  private Node(Node.Builder<T> builder) {
+    this(builder.volume, builder.theta);
+  }
+
+  private Node(double x, double y, double z, double width, double height, double depth) {
     this(new Box(x, y, z, width, height, depth));
+  }
+
+  private Node(Box r, double theta) {
+    this.area = r;
+    this.theta = theta;
   }
 
   public Node(Box r) {
@@ -106,7 +153,7 @@ public class Node<T> {
     } else if (BSW.area.contains(forceObject.p)) {
       BSW.insert(forceObject);
     } else {
-      log.error("no home for {}", forceObject);
+      log.error("no home for {} in {}", forceObject, this);
     }
   }
 
@@ -145,7 +192,7 @@ public class Node<T> {
     }
   }
 
-  public void visit(ForceObject<T> target, Optional userData) {
+  public void visit(ForceObject<T> target) {
     if (this.forceObject == null || target.getElement().equals(this.forceObject.getElement())) {
       return;
     }
@@ -159,7 +206,7 @@ public class Node<T> {
             target.getElement(),
             target.p);
       }
-      target.addForceFrom(this.forceObject, userData);
+      target.addForceFrom(this.forceObject);
       log.trace("added force from {} so its now {}", this.forceObject, target);
     } else {
       // not a leaf
@@ -169,7 +216,7 @@ public class Node<T> {
       //      distance between the incoming node's position and
       //      the center of mass for this node
       double d = this.forceObject.p.distance(target.p);
-      if (s / d < THETA) {
+      if (s / d < DEFAULT_THETA) {
         // this node is sufficiently far away
         // just use this node's forces
         if (log.isTraceEnabled()) {
@@ -180,19 +227,19 @@ public class Node<T> {
               target.getElement(),
               target.p);
         }
-        target.addForceFrom(this.forceObject, userData);
+        target.addForceFrom(this.forceObject);
         log.trace("added force from {} so its now {}", this.forceObject, target);
 
       } else {
         // down the tree we go
-        FNW.visit(target, userData);
-        FNE.visit(target, userData);
-        FSW.visit(target, userData);
-        FSE.visit(target, userData);
-        BNW.visit(target, userData);
-        BNE.visit(target, userData);
-        BSW.visit(target, userData);
-        BSE.visit(target, userData);
+        FNW.visit(target);
+        FNE.visit(target);
+        FSW.visit(target);
+        FSE.visit(target);
+        BNW.visit(target);
+        BNE.visit(target);
+        BSW.visit(target);
+        BSE.visit(target);
       }
     }
   }
@@ -235,6 +282,47 @@ public class Node<T> {
 
     return s.toString();
   }
+
+  /**
+   * accept a visit from the visitor force object, and add this node's forces to the visitor
+   *
+   * @param visitor the visitor
+   */
+  public void applyForcesTo(ForceObject<T> visitor) {
+    Preconditions.checkArgument(visitor != null, "Cannot apply forces to a null ForceObject");
+    if (this.forceObject == null || visitor.getElement().equals(this.forceObject.getElement())) {
+      return;
+    }
+
+    if (isLeaf()) {
+
+      visitor.addForceFrom(this.forceObject);
+
+    } else {
+      // not a leaf. this node is an internal node
+      //  calculate s/d
+      double s = this.area.width;
+      //      distance between the incoming node's position and
+      //      the center of mass for this node
+      double d = this.forceObject.p.distance(visitor.p);
+      if (s / d < theta) {
+        // this node is sufficiently far away, just use this node's forces
+        visitor.addForceFrom(this.forceObject);
+
+      } else {
+        // down the tree we go
+        FNW.applyForcesTo(visitor);
+        FNE.applyForcesTo(visitor);
+        FSW.applyForcesTo(visitor);
+        FSE.applyForcesTo(visitor);
+        BNW.applyForcesTo(visitor);
+        BNE.applyForcesTo(visitor);
+        BSW.applyForcesTo(visitor);
+        BSE.applyForcesTo(visitor);
+      }
+    }
+  }
+
 
   static String marginIncrement = "   ";
 

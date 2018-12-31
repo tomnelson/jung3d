@@ -12,14 +12,14 @@ package edu.uci.ics.jung.samples;
 /** */
 import com.google.common.graph.Network;
 import edu.uci.ics.jung.graph.util.TestGraphs;
-import edu.uci.ics.jung.layout3d.algorithms.FRBHVisitorLayoutAlgorithm;
 import edu.uci.ics.jung.layout3d.algorithms.FRLayoutAlgorithm;
 import edu.uci.ics.jung.layout3d.algorithms.ISOMLayoutAlgorithm;
 import edu.uci.ics.jung.layout3d.algorithms.KKLayoutAlgorithm;
 import edu.uci.ics.jung.layout3d.algorithms.LayoutAlgorithm;
 import edu.uci.ics.jung.layout3d.algorithms.SphereLayoutAlgorithm;
-import edu.uci.ics.jung.layout3d.algorithms.SpringBHLayoutAlgorithm;
 import edu.uci.ics.jung.layout3d.algorithms.SpringLayoutAlgorithm;
+import edu.uci.ics.jung.layout3d.algorithms.repulsion.BarnesHutFRRepulsion;
+import edu.uci.ics.jung.layout3d.algorithms.repulsion.BarnesHutSpringRepulsion;
 import edu.uci.ics.jung.layout3d.util.LayoutAlgorithmTransition;
 import edu.uci.ics.jung.visualization3d.VisualizationViewer;
 import java.awt.*;
@@ -125,29 +125,30 @@ public class GraphDemo extends JPanel {
     LayoutAlgorithm layoutAlgorithm;
     switch (selected) {
       case SPRING:
-        layoutAlgorithm = new SpringLayoutAlgorithm();
+        layoutAlgorithm = SpringLayoutAlgorithm.builder().build();
         break;
       case SPRING_BH:
-        layoutAlgorithm = new SpringBHLayoutAlgorithm();
+        layoutAlgorithm = SpringLayoutAlgorithm.builder().setRepulsionContractBuilder(BarnesHutSpringRepulsion.barnesHutBuilder()).build();
         break;
       case SPHERE:
         layoutAlgorithm = new SphereLayoutAlgorithm();
         break;
       case FRLAYOUT:
-        layoutAlgorithm = new FRLayoutAlgorithm();
+        layoutAlgorithm = FRLayoutAlgorithm.builder().build();
+                //new FRLayoutAlgorithm();
         break;
       case FRBHLAYOUT:
-        layoutAlgorithm = new FRBHVisitorLayoutAlgorithm();
+        layoutAlgorithm = FRLayoutAlgorithm.builder().setRepulsionContractBuilder(BarnesHutFRRepulsion.barnesHutBuilder()).build();
         break;
       case KK:
-        layoutAlgorithm = new KKLayoutAlgorithm();
+        layoutAlgorithm = KKLayoutAlgorithm.builder().build();
         break;
       case ISOM:
-        layoutAlgorithm = new ISOMLayoutAlgorithm();
+        layoutAlgorithm = ISOMLayoutAlgorithm.builder().build();
         break;
       default:
         log.warn("using default layout algorithm");
-        layoutAlgorithm = new SpringLayoutAlgorithm();
+        layoutAlgorithm = SpringLayoutAlgorithm.builder().build();
     }
     return layoutAlgorithm;
   }

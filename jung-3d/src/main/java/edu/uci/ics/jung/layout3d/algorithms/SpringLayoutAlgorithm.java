@@ -6,6 +6,8 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.graph.EndpointPair;
 import com.google.common.graph.Graph;
 import edu.uci.ics.jung.algorithms.util.IterativeContext;
+import edu.uci.ics.jung.layout3d.algorithms.repulsion.StandardSpringRepulsion;
+import edu.uci.ics.jung.layout3d.model.LayoutModel;
 import edu.uci.ics.jung.layout3d.model.Point;
 import java.util.ConcurrentModificationException;
 import java.util.function.Function;
@@ -28,13 +30,61 @@ public class SpringLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N
   protected LoadingCache<N, SpringNodeData> springNodeData =
       CacheBuilder.newBuilder().build(CacheLoader.from(() -> new SpringNodeData()));
 
-  public SpringLayoutAlgorithm() {
-    this(n -> 30);
+  protected StandardSpringRepulsion.Builder repulsionContractBuilder;
+    protected StandardSpringRepulsion repulsionContract;
+
+  public static class Builder<N>
+          extends AbstractIterativeLayoutAlgorithm.Builder<N, SpringLayoutAlgorithm<N>, Builder<N>> {
+    private StandardSpringRepulsion.Builder repulsionContractBuilder =
+            StandardSpringRepulsion.standardBuilder();
+    private Function<? super EndpointPair<N>, Integer> lengthFunction = n -> 30;
+
+    public Builder<N> setRepulsionContractBuilder(
+            StandardSpringRepulsion.Builder repulsionContractBuilder) {
+      this.repulsionContractBuilder = (StandardSpringRepulsion.Builder) repulsionContractBuilder;
+      return this;
+    }
+
+    public Builder<N> setLengthFunction(Function<? super EndpointPair<N>, Integer> lengthFunction) {
+      this.lengthFunction = lengthFunction;
+      return this;
+    }
+
+    public SpringLayoutAlgorithm<N> build() {
+      return new SpringLayoutAlgorithm(this);
+    }
   }
 
-  public SpringLayoutAlgorithm(Function<? super EndpointPair<N>, Integer> length_function) {
-    this.lengthFunction = length_function;
+  public static <N> Builder<N> builder() {
+    return new Builder<N>();
   }
+
+  protected SpringLayoutAlgorithm(Builder<N> builder) {
+    super(builder);
+        this.lengthFunction = builder.lengthFunction;
+        this.repulsionContractBuilder = builder.repulsionContractBuilder;
+  }
+
+//  public SpringLayoutAlgorithm() {
+//    this(n -> 30);
+//  }
+//
+//  public SpringLayoutAlgorithm(Function<? super EndpointPair<N>, Integer> length_function) {
+//    this.lengthFunction = length_function;
+//  }
+@Override
+public void visit(LayoutModel<N> layoutModel) {
+  super.visit(layoutModel);
+
+  // setting the layout model will build the BHQT if the builder is the
+  // Optimized one
+  repulsionContract =
+          repulsionContractBuilder
+                  .setSpringNodeData(springNodeData)
+                  .setLayoutModel(layoutModel)
+                  .setRandom(random)
+                  .build();
+}
 
   /** @return the current value for the stretch parameter */
   public double getStretch() {
@@ -64,6 +114,7 @@ public class SpringLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N
   public void initialize() {}
 
   public void step() {
+    this.repulsionContract.step();
     Graph<N> graph = layoutModel.getGraph();
     try {
       for (N node : graph.nodes()) {
@@ -82,7 +133,7 @@ public class SpringLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N
     }
 
     relaxEdges();
-    calculateRepulsion();
+    repulsionContract.calculateRepulsion();
     moveNodes();
   }
 
@@ -242,13 +293,13 @@ public class SpringLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N
     }
   }
 
-  protected static class SpringNodeData {
+  public static class SpringNodeData {
     protected double edgedx;
     protected double edgedy;
     protected double edgedz;
-    protected double repulsiondx;
-    protected double repulsiondy;
-    protected double repulsiondz;
+    public double repulsiondx;
+    public double repulsiondy;
+    public double repulsiondz;
 
     /** movement speed, x */
     protected double dx;
