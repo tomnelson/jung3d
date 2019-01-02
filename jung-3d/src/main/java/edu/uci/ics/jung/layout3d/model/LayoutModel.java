@@ -12,7 +12,6 @@ package edu.uci.ics.jung.layout3d.model;
 import com.google.common.collect.Maps;
 import com.google.common.graph.Graph;
 import edu.uci.ics.jung.layout3d.algorithms.LayoutAlgorithm;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Function;
@@ -36,7 +35,6 @@ public interface LayoutModel<N> extends Function<N, Point> {
   default Map<N, Point> getLocations() {
     return Collections.unmodifiableMap(Maps.asMap(getGraph().nodes(), this::apply));
   }
-
 
   void setSize(int width, int helght, int depth);
 

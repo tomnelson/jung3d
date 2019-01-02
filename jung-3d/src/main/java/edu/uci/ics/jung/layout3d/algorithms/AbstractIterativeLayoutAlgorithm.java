@@ -15,23 +15,24 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractIterativeLayoutAlgorithm<N> implements IterativeLayoutAlgorithm<N> {
 
   private static final Logger log = LoggerFactory.getLogger(AbstractIterativeLayoutAlgorithm.class);
+
   public abstract static class Builder<
-          N, T extends AbstractIterativeLayoutAlgorithm<N>, B extends Builder<N, T, B>> {
+      N, T extends AbstractIterativeLayoutAlgorithm<N>, B extends Builder<N, T, B>> {
     protected Random random = new Random();
     protected boolean shouldPrerelax = true;
     protected int preRelaxDurationMs = 500;
 
-    public B setRandomSeed(long randomSeed) {
+    public B withRandomSeed(long randomSeed) {
       this.random = new Random(randomSeed);
       return (B) this;
     }
 
-    public B setShouldPrerelax(boolean shouldPrerelax) {
+    public B shouldPrerelax(boolean shouldPrerelax) {
       this.shouldPrerelax = shouldPrerelax;
       return (B) this;
     }
 
-    public B setPreRelaxDuration(int preRelaxDurationMs) {
+    public B withPreRelaxDuration(int preRelaxDurationMs) {
       this.preRelaxDurationMs = preRelaxDurationMs;
       return (B) this;
     }

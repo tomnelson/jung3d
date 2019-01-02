@@ -31,21 +31,22 @@ public class SpringLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N
       CacheBuilder.newBuilder().build(CacheLoader.from(() -> new SpringNodeData()));
 
   protected StandardSpringRepulsion.Builder repulsionContractBuilder;
-    protected StandardSpringRepulsion repulsionContract;
+  protected StandardSpringRepulsion repulsionContract;
 
   public static class Builder<N>
-          extends AbstractIterativeLayoutAlgorithm.Builder<N, SpringLayoutAlgorithm<N>, Builder<N>> {
+      extends AbstractIterativeLayoutAlgorithm.Builder<N, SpringLayoutAlgorithm<N>, Builder<N>> {
     private StandardSpringRepulsion.Builder repulsionContractBuilder =
-            StandardSpringRepulsion.standardBuilder();
+        StandardSpringRepulsion.standardBuilder();
     private Function<? super EndpointPair<N>, Integer> lengthFunction = n -> 30;
 
-    public Builder<N> setRepulsionContractBuilder(
-            StandardSpringRepulsion.Builder repulsionContractBuilder) {
+    public Builder<N> withRepulsionContractBuilder(
+        StandardSpringRepulsion.Builder repulsionContractBuilder) {
       this.repulsionContractBuilder = (StandardSpringRepulsion.Builder) repulsionContractBuilder;
       return this;
     }
 
-    public Builder<N> setLengthFunction(Function<? super EndpointPair<N>, Integer> lengthFunction) {
+    public Builder<N> withLengthFunction(
+        Function<? super EndpointPair<N>, Integer> lengthFunction) {
       this.lengthFunction = lengthFunction;
       return this;
     }
@@ -61,30 +62,23 @@ public class SpringLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N
 
   protected SpringLayoutAlgorithm(Builder<N> builder) {
     super(builder);
-        this.lengthFunction = builder.lengthFunction;
-        this.repulsionContractBuilder = builder.repulsionContractBuilder;
+    this.lengthFunction = builder.lengthFunction;
+    this.repulsionContractBuilder = builder.repulsionContractBuilder;
   }
 
-//  public SpringLayoutAlgorithm() {
-//    this(n -> 30);
-//  }
-//
-//  public SpringLayoutAlgorithm(Function<? super EndpointPair<N>, Integer> length_function) {
-//    this.lengthFunction = length_function;
-//  }
-@Override
-public void visit(LayoutModel<N> layoutModel) {
-  super.visit(layoutModel);
+  @Override
+  public void visit(LayoutModel<N> layoutModel) {
+    super.visit(layoutModel);
 
-  // setting the layout model will build the BHQT if the builder is the
-  // Optimized one
-  repulsionContract =
-          repulsionContractBuilder
-                  .setSpringNodeData(springNodeData)
-                  .setLayoutModel(layoutModel)
-                  .setRandom(random)
-                  .build();
-}
+    // setting the layout model will build the BHQT if the builder is the
+    // Optimized one
+    repulsionContract =
+        repulsionContractBuilder
+            .withSpringNodeData(springNodeData)
+            .withLayoutModel(layoutModel)
+            .withRandom(random)
+            .build();
+  }
 
   /** @return the current value for the stretch parameter */
   public double getStretch() {

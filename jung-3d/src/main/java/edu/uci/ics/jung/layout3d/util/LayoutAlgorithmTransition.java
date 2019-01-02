@@ -24,7 +24,10 @@ public class LayoutAlgorithmTransition<N, E> {
       VisualizationViewer<N, E> visualizationServer, LayoutAlgorithm<N> endLayoutAlgorithm) {
     fireLayoutStateChanged(visualizationServer.getLayoutModel(), true);
     LayoutAlgorithm<N> transitionLayoutAlgorithm =
-        AnimationLayoutAlgorithm.builder().setVisualizationServer(visualizationServer).setEndLayoutAlgorithm(endLayoutAlgorithm).build();
+        AnimationLayoutAlgorithm.builder()
+            .withVisualizationServer(visualizationServer)
+            .withEndLayoutAlgorithm(endLayoutAlgorithm)
+            .build();
     visualizationServer.setLayoutAlgorithm(transitionLayoutAlgorithm);
   }
 

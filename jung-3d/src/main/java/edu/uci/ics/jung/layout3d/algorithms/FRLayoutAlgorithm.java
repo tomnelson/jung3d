@@ -10,7 +10,6 @@ import edu.uci.ics.jung.algorithms.util.IterativeContext;
 import edu.uci.ics.jung.layout3d.algorithms.repulsion.StandardFRRepulsion;
 import edu.uci.ics.jung.layout3d.model.LayoutModel;
 import edu.uci.ics.jung.layout3d.model.Point;
-import edu.uci.ics.jung.layout3d.util.RandomLocationTransformer;
 import java.util.ConcurrentModificationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,13 +33,13 @@ public class FRLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N>
   private int mMaxIterations = 700;
 
   protected LoadingCache<N, Point> frNodeData =
-          CacheBuilder.newBuilder()
-                  .build(
-                          new CacheLoader<N, Point>() {
-                            public Point load(N node) {
-                              return Point.ORIGIN;
-                            }
-                          });
+      CacheBuilder.newBuilder()
+          .build(
+              new CacheLoader<N, Point>() {
+                public Point load(N node) {
+                  return Point.ORIGIN;
+                }
+              });
 
   private double attractionMultiplier = 0.75;
 
@@ -69,12 +68,12 @@ public class FRLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N>
   protected StandardFRRepulsion repulsionContract;
 
   public static class Builder<N>
-          extends AbstractIterativeLayoutAlgorithm.Builder<N, FRLayoutAlgorithm<N>, Builder<N>> {
+      extends AbstractIterativeLayoutAlgorithm.Builder<N, FRLayoutAlgorithm<N>, Builder<N>> {
     private StandardFRRepulsion.Builder repulsionContractBuilder =
-            new StandardFRRepulsion.Builder();
+        new StandardFRRepulsion.Builder();
 
-    public Builder<N> setRepulsionContractBuilder(
-            StandardFRRepulsion.Builder repulsionContractBuilder) {
+    public Builder<N> withRepulsionContractBuilder(
+        StandardFRRepulsion.Builder repulsionContractBuilder) {
       this.repulsionContractBuilder = repulsionContractBuilder;
       return this;
     }
@@ -92,16 +91,6 @@ public class FRLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N>
     super(builder);
     this.repulsionContractBuilder = builder.repulsionContractBuilder;
   }
-//  public FRLayoutAlgorithm() {
-//    this.frNodeData =
-//        CacheBuilder.newBuilder()
-//            .build(
-//                new CacheLoader<N, Point>() {
-//                  public Point load(N node) {
-//                    return Point.ORIGIN;
-//                  }
-//                });
-//  }
 
   @Override
   public void visit(LayoutModel<N> layoutModel) {
@@ -111,25 +100,25 @@ public class FRLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N>
     super.visit(layoutModel);
     maxDimension = Math.max(layoutModel.getWidth(), layoutModel.getHeight());
 
-        this.width = layoutModel.getWidth() * (float) Math.sqrt(2.0f) / 2.0f;
-        this.height = layoutModel.getHeight() * (float) Math.sqrt(2.0f) / 2.0f;
-        this.depth = layoutModel.getDepth() * (float) Math.sqrt(2.0f) / 2.0f;
-        this.xMax = width / 2;
-        this.xMin = -this.xMax;
-        this.yMax = height / 2;
-        this.yMin = -this.yMax;
-        this.zMax = depth / 2;
-        this.zMin = -this.zMax;
-        this.border = Math.max(width, Math.max(height, depth)) / 50;
+    this.width = layoutModel.getWidth() * (float) Math.sqrt(2.0f) / 2.0f;
+    this.height = layoutModel.getHeight() * (float) Math.sqrt(2.0f) / 2.0f;
+    this.depth = layoutModel.getDepth() * (float) Math.sqrt(2.0f) / 2.0f;
+    this.xMax = width / 2;
+    this.xMin = -this.xMax;
+    this.yMax = height / 2;
+    this.yMin = -this.yMax;
+    this.zMax = depth / 2;
+    this.zMin = -this.zMax;
+    this.border = Math.max(width, Math.max(height, depth)) / 50;
 
     initialize();
     repulsionContract =
-            repulsionContractBuilder
-                    .setLayoutModel(layoutModel)
-                    .setFRNodeData(frNodeData)
-                    .setRepulsionConstant(repulsionConstant)
-                    .setRandom(random)
-                    .build();
+        repulsionContractBuilder
+            .withLayoutModel(layoutModel)
+            .withFRNodeData(frNodeData)
+            .withRepulsionConstant(repulsionConstant)
+            .withRandom(random)
+            .build();
   }
 
   public void setAttractionMultiplier(double attraction) {
@@ -155,7 +144,7 @@ public class FRLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N>
       temperature = layoutModel.getWidth() / 10;
 
       forceConstant =
-              Math.sqrt(layoutModel.getHeight() * layoutModel.getWidth() / graph.nodes().size());
+          Math.sqrt(layoutModel.getHeight() * layoutModel.getWidth() / graph.nodes().size());
 
       attractionConstant = attractionMultiplier * forceConstant;
       repulsionConstant = repulsionMultiplier * forceConstant;
@@ -170,7 +159,7 @@ public class FRLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N>
    * edges and cooling the temperature.
    */
   public synchronized void step() {
-
+    repulsionContract.step();
     if (!initialized) {
       doInit();
     }
@@ -283,44 +272,44 @@ public class FRLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N>
     }
   }
 
-//  protected void calcRepulsion(N node1) {
-//    Point fvd1 = getFRData(node1);
-//    if (fvd1 == null) {
-//      return;
-//    }
-//    frNodeData.put(node1, Point.ORIGIN);
-//
-//    try {
-//      for (N node2 : layoutModel.getGraph().nodes()) {
-//
-//        if (node1 != node2) {
-//          fvd1 = getFRData(node1);
-//          Point p1 = layoutModel.apply(node1);
-//          Point p2 = layoutModel.apply(node2);
-//          if (p1 == null || p2 == null) {
-//            continue;
-//          }
-//          double dx = p1.x - p2.x;
-//          double dy = p1.y - p2.y;
-//          double dz = p1.z - p2.z;
-//
-//          double dist = Math.max(EPSILON, Math.sqrt((dx * dx) + (dy * dy) + (dz * dz)));
-//
-//          double force = (repulsion_constant * repulsion_constant) / dist;
-//
-//          if (Double.isNaN(force)) {
-//            throw new RuntimeException(
-//                "Unexpected mathematical result in FRLayout:calcPositions [repulsion]");
-//          }
-//
-//          fvd1 = fvd1.add((dx / dist) * force, (dy / dist) * force, (dz / dist) * force);
-//          frNodeData.put(node1, fvd1);
-//        }
-//      }
-//    } catch (ConcurrentModificationException cme) {
-//      calcRepulsion(node1);
-//    }
-//  }
+  //  protected void calcRepulsion(N node1) {
+  //    Point fvd1 = getFRData(node1);
+  //    if (fvd1 == null) {
+  //      return;
+  //    }
+  //    frNodeData.put(node1, Point.ORIGIN);
+  //
+  //    try {
+  //      for (N node2 : layoutModel.getGraph().nodes()) {
+  //
+  //        if (node1 != node2) {
+  //          fvd1 = getFRData(node1);
+  //          Point p1 = layoutModel.apply(node1);
+  //          Point p2 = layoutModel.apply(node2);
+  //          if (p1 == null || p2 == null) {
+  //            continue;
+  //          }
+  //          double dx = p1.x - p2.x;
+  //          double dy = p1.y - p2.y;
+  //          double dz = p1.z - p2.z;
+  //
+  //          double dist = Math.max(EPSILON, Math.sqrt((dx * dx) + (dy * dy) + (dz * dz)));
+  //
+  //          double force = (repulsion_constant * repulsion_constant) / dist;
+  //
+  //          if (Double.isNaN(force)) {
+  //            throw new RuntimeException(
+  //                "Unexpected mathematical result in FRLayout:calcPositions [repulsion]");
+  //          }
+  //
+  //          fvd1 = fvd1.add((dx / dist) * force, (dy / dist) * force, (dz / dist) * force);
+  //          frNodeData.put(node1, fvd1);
+  //        }
+  //      }
+  //    } catch (ConcurrentModificationException cme) {
+  //      calcRepulsion(node1);
+  //    }
+  //  }
 
   private void cool() {
     temperature *= (1.0 - currentIteration / (double) mMaxIterations);

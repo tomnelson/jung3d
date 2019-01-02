@@ -1,12 +1,11 @@
 package edu.uci.ics.jung.layout3d.spatial;
 
 import edu.uci.ics.jung.layout3d.model.Point;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An instance used to gather forces while visiting the BarnesHut QuadTree.
+ * An instance used to gather forces while visiting the BarnesHutOctTree.
  *
  * @author Tom Nelson
  */
@@ -51,10 +50,8 @@ public class ForceObject<T> {
    * implementation. See FRBHVisitorLayoutAlgorithm and SpringVisitorLayoutAlgorithm.
    *
    * @param other the ForceObject (a node or a force vector) to apply force from
-//   * @param userData optional data to pass to the visitor method
-   * @param <S> the type of the userData
    */
-  protected <S> void addForceFrom(ForceObject<T> other) {
+  protected void addForceFrom(ForceObject<T> other) {
     // no op
   }
 

@@ -128,17 +128,23 @@ public class GraphDemo extends JPanel {
         layoutAlgorithm = SpringLayoutAlgorithm.builder().build();
         break;
       case SPRING_BH:
-        layoutAlgorithm = SpringLayoutAlgorithm.builder().setRepulsionContractBuilder(BarnesHutSpringRepulsion.barnesHutBuilder()).build();
+        layoutAlgorithm =
+            SpringLayoutAlgorithm.builder()
+                .withRepulsionContractBuilder(BarnesHutSpringRepulsion.barnesHutBuilder())
+                .build();
         break;
       case SPHERE:
         layoutAlgorithm = new SphereLayoutAlgorithm();
         break;
       case FRLAYOUT:
         layoutAlgorithm = FRLayoutAlgorithm.builder().build();
-                //new FRLayoutAlgorithm();
+        //new FRLayoutAlgorithm();
         break;
       case FRBHLAYOUT:
-        layoutAlgorithm = FRLayoutAlgorithm.builder().setRepulsionContractBuilder(BarnesHutFRRepulsion.barnesHutBuilder()).build();
+        layoutAlgorithm =
+            FRLayoutAlgorithm.builder()
+                .withRepulsionContractBuilder(BarnesHutFRRepulsion.barnesHutBuilder())
+                .build();
         break;
       case KK:
         layoutAlgorithm = KKLayoutAlgorithm.builder().build();

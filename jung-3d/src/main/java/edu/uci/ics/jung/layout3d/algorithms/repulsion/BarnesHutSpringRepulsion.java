@@ -8,9 +8,7 @@ import edu.uci.ics.jung.layout3d.model.Point;
 import edu.uci.ics.jung.layout3d.spatial.BarnesHutOctTree;
 import edu.uci.ics.jung.layout3d.spatial.ForceObject;
 import edu.uci.ics.jung.layout3d.spatial.Node;
-
 import java.util.ConcurrentModificationException;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -28,24 +26,31 @@ public class BarnesHutSpringRepulsion<N>
       implements BarnesHutRepulsion.Builder<N, BarnesHutSpringRepulsion<N>, Builder<N>> {
 
     private double theta = Node.DEFAULT_THETA;
-    private BarnesHutOctTree<N> tree = BarnesHutOctTree.<N>builder().build();
+    private BarnesHutOctTree<N> tree; // = BarnesHutOctTree.<N>builder().build();
 
-    public Builder<N> setLayoutModel(LayoutModel<N> layoutModel) {
+    public Builder<N> withLayoutModel(LayoutModel<N> layoutModel) {
       this.layoutModel = layoutModel;
       this.tree =
           BarnesHutOctTree.<N>builder()
-              .setBounds(layoutModel.getWidth(), layoutModel.getHeight(), layoutModel.getDepth())
-              .setTheta(theta)
+              .withBounds(
+                  -layoutModel.getWidth() / 2,
+                  -layoutModel.getHeight() / 2,
+                  -layoutModel.getDepth() / 2,
+                  layoutModel.getWidth(),
+                  layoutModel.getHeight(),
+                  layoutModel.getDepth())
+              .withTheta(theta)
               .build();
       return this;
     }
 
-    public Builder<N> setTheta(double theta) {
+    public Builder<N> withTheta(double theta) {
       this.theta = theta;
       return this;
     }
 
-    public Builder<N> setSpringNodeData(LoadingCache<N, SpringLayoutAlgorithm.SpringNodeData> springNodeData) {
+    public Builder<N> withSpringNodeData(
+        LoadingCache<N, SpringLayoutAlgorithm.SpringNodeData> springNodeData) {
       this.springNodeData = springNodeData;
       return this;
     }
@@ -56,7 +61,7 @@ public class BarnesHutSpringRepulsion<N>
     }
 
     @Override
-    public Builder<N> setRandom(Random random) {
+    public Builder<N> withRandom(Random random) {
       this.random = random;
       return this;
     }

@@ -52,6 +52,7 @@ public class ISOMLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N>
   protected ISOMLayoutAlgorithm(Builder builder) {
     super(builder);
   }
+
   protected LoadingCache<N, ISOMNodeData> isomNodeData =
       CacheBuilder.newBuilder()
           .build(

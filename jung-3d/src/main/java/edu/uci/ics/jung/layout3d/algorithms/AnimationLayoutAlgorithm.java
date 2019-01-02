@@ -4,7 +4,6 @@ import edu.uci.ics.jung.algorithms.util.IterativeContext;
 import edu.uci.ics.jung.layout3d.model.LayoutModel;
 import edu.uci.ics.jung.layout3d.model.LoadingCacheLayoutModel;
 import edu.uci.ics.jung.layout3d.model.Point;
-import edu.uci.ics.jung.visualization.VisualizationServer;
 import edu.uci.ics.jung.visualization3d.VisualizationViewer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,22 +25,22 @@ public class AnimationLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorith
 
   public static class Builder<N> extends AbstractIterativeLayoutAlgorithm.Builder {
 
-    private VisualizationViewer<N,?> visualizationServer;
+    private VisualizationViewer<N, ?> visualizationServer;
     private LayoutAlgorithm<N> endLayoutAlgorithm;
     private boolean shouldPrerelax = false;
 
-    public Builder setVisualizationServer(VisualizationViewer<N, ?> visualizationServer) {
+    public Builder withVisualizationServer(VisualizationViewer<N, ?> visualizationServer) {
       this.visualizationServer = visualizationServer;
       return this;
     }
 
-    public Builder setEndLayoutAlgorithm(LayoutAlgorithm<N> endLayoutAlgorithm) {
+    public Builder withEndLayoutAlgorithm(LayoutAlgorithm<N> endLayoutAlgorithm) {
       this.endLayoutAlgorithm = endLayoutAlgorithm;
       return this;
     }
 
     @Override
-    public Builder setShouldPrerelax(boolean shouldPrerelax) {
+    public Builder shouldPrerelax(boolean shouldPrerelax) {
       this.shouldPrerelax = shouldPrerelax;
       return this;
     }
@@ -69,13 +68,6 @@ public class AnimationLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorith
     this.endLayoutAlgorithm = builder.endLayoutAlgorithm;
     this.shouldPreRelax = builder.shouldPrerelax;
   }
-
-//  public AnimationLayoutAlgorithm(
-//      VisualizationViewer<N, ?> visualizationServer, LayoutAlgorithm<N> endLayoutAlgorithm) {
-//    this.visualizationServer = visualizationServer;
-//    this.endLayoutAlgorithm = endLayoutAlgorithm;
-//    this.shouldPreRelax = false;
-//  }
 
   public void visit(LayoutModel<N> layoutModel) {
     // save off the existing layoutModel

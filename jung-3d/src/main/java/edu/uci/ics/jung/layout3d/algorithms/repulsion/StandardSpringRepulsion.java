@@ -5,7 +5,6 @@ import com.google.common.graph.Graph;
 import edu.uci.ics.jung.layout3d.algorithms.SpringLayoutAlgorithm;
 import edu.uci.ics.jung.layout3d.model.LayoutModel;
 import edu.uci.ics.jung.layout3d.model.Point;
-
 import java.util.ConcurrentModificationException;
 import java.util.Random;
 
@@ -28,7 +27,8 @@ public class StandardSpringRepulsion<
     protected Random random = new Random();
     protected LayoutModel<N> layoutModel;
 
-    public B setSpringNodeData(LoadingCache<N, SpringLayoutAlgorithm.SpringNodeData> springNodeData) {
+    public B withSpringNodeData(
+        LoadingCache<N, SpringLayoutAlgorithm.SpringNodeData> springNodeData) {
       this.springNodeData = springNodeData;
       return (B) this;
     }
@@ -39,13 +39,13 @@ public class StandardSpringRepulsion<
     }
 
     @Override
-    public B setLayoutModel(LayoutModel<N> layoutModel) {
+    public B withLayoutModel(LayoutModel<N> layoutModel) {
       this.layoutModel = layoutModel;
       return (B) this;
     }
 
     @Override
-    public B setRandom(Random random) {
+    public B withRandom(Random random) {
       this.random = random;
       return (B) this;
     }
@@ -139,7 +139,7 @@ public class StandardSpringRepulsion<
   ////    protected Random random = new Random();
   ////    protected LayoutModel<N> layoutModel;
   //
-  ////    public B setSpringNodeData(LoadingCache<N, SpringNodeData> springNodeData) {
+  ////    public B withSpringNodeData(LoadingCache<N, SpringNodeData> springNodeData) {
   ////      this.springNodeData = springNodeData;
   ////      return (B) this;
   ////    }
@@ -150,13 +150,13 @@ public class StandardSpringRepulsion<
   ////    }
   //
   ////    @Override
-  ////    public B setLayoutModel(LayoutModel<N> layoutModel) {
+  ////    public B withLayoutModel(LayoutModel<N> layoutModel) {
   ////      this.layoutModel = layoutModel;
   ////      return (B) this;
   ////    }
   //
   ////    @Override
-  ////    public B setRandom(Random random) {
+  ////    public B withRandom(Random random) {
   ////      this.random = random;
   ////      return (B) this;
   ////    }

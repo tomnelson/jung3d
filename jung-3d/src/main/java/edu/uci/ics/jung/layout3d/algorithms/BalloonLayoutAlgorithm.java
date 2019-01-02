@@ -10,17 +10,12 @@
 
 package edu.uci.ics.jung.layout3d.algorithms;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.graph.Graph;
 import edu.uci.ics.jung.graph.util.TreeUtils;
 import edu.uci.ics.jung.layout3d.model.LayoutModel;
 import edu.uci.ics.jung.layout3d.model.Point;
 import edu.uci.ics.jung.layout3d.util.Spherical;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +30,7 @@ public class BalloonLayoutAlgorithm<N> implements Spherical, LayoutAlgorithm<N> 
 
   private static final Logger log = LoggerFactory.getLogger(BalloonLayoutAlgorithm.class);
 
-  private Map<Point, Integer> sphereLocations = Maps.newHashMap();
+  private Map<Point, Integer> sphereLocations = new HashMap<>();
 
   private LayoutModel<N> layoutModel;
 
@@ -70,7 +65,7 @@ public class BalloonLayoutAlgorithm<N> implements Spherical, LayoutAlgorithm<N> 
   }
 
   protected void breadth(N root) {
-    List<N> queue = Lists.newArrayList();
+    List<N> queue = new ArrayList<>();
     queue.add(root);
     while (!queue.isEmpty()) {
       N n = queue.remove(0);

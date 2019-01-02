@@ -399,7 +399,7 @@ public class VisualizationViewer<N, E> extends JPanel {
     }
   }
 
-  //  public void setLayoutModel(Network<N,E> network, LayoutModel<N, Point3f> inLayoutModel) {
+  //  public void withLayoutModel(Network<N,E> network, LayoutModel<N, Point3f> inLayoutModel) {
 
   //call when you set the network
   public void init(Graph<N> graph) {

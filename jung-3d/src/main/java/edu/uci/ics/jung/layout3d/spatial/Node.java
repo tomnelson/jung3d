@@ -1,7 +1,5 @@
 package edu.uci.ics.jung.layout3d.spatial;
 
-import java.util.Optional;
-
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,23 +36,23 @@ public class Node<T> {
 
   protected double theta = DEFAULT_THETA;
 
-  private Box area;
+  private Box volume;
 
   public static class Builder<T> {
     protected double theta = DEFAULT_THETA;
     protected Box volume;
 
-    public Node.Builder<T> setVolume(
-            double x, double y, double z, double width, double height, double depth) {
-      return setVolume(new Box(x, y, z, width, height, depth));
+    public Node.Builder<T> withVolume(
+        double x, double y, double z, double width, double height, double depth) {
+      return withVolume(new Box(x, y, z, width, height, depth));
     }
 
-    public Node.Builder<T> setVolume(Box volume) {
+    public Node.Builder<T> withVolume(Box volume) {
       this.volume = volume;
       return this;
     }
 
-    public Node.Builder<T> setTheta(double theta) {
+    public Node.Builder<T> withTheta(double theta) {
       this.theta = theta;
       return this;
     }
@@ -67,6 +65,7 @@ public class Node<T> {
   public static <T> Builder<T> builder() {
     return new Builder<>();
   }
+
   private Node(Node.Builder<T> builder) {
     this(builder.volume, builder.theta);
   }
@@ -76,18 +75,23 @@ public class Node<T> {
   }
 
   private Node(Box r, double theta) {
-    this.area = r;
+    this.volume = r;
     this.theta = theta;
   }
 
-  public Node(Box r) {
-    area = r;
+  private Node(Box r) {
+    volume = r;
   }
 
   public ForceObject<T> getForceObject() {
     return forceObject;
   }
 
+  /**
+   * if all child Nodes are null, this is a leaf
+   *
+   * @return true it this is a leaf node
+   */
   public boolean isLeaf() {
     return BNW == null
         && BNE == null
@@ -106,9 +110,9 @@ public class Node<T> {
    * @param element
    */
   public void insert(ForceObject<T> element) {
-    //    if (log.isTraceEnabled()) {
+
     log.debug("insert {} into {}", element, this);
-    //    }
+
     if (forceObject == null) {
       forceObject = element;
       return;
@@ -136,21 +140,21 @@ public class Node<T> {
   }
 
   private void insertForceObject(ForceObject<T> forceObject) {
-    if (FNW.area.contains(forceObject.p)) {
+    if (FNW.volume.contains(forceObject.p)) {
       FNW.insert(forceObject);
-    } else if (FNE.area.contains(forceObject.p)) {
+    } else if (FNE.volume.contains(forceObject.p)) {
       FNE.insert(forceObject);
-    } else if (FSE.area.contains(forceObject.p)) {
+    } else if (FSE.volume.contains(forceObject.p)) {
       FSE.insert(forceObject);
-    } else if (FSW.area.contains(forceObject.p)) {
+    } else if (FSW.volume.contains(forceObject.p)) {
       FSW.insert(forceObject);
-    } else if (BNW.area.contains(forceObject.p)) {
+    } else if (BNW.volume.contains(forceObject.p)) {
       BNW.insert(forceObject);
-    } else if (BNE.area.contains(forceObject.p)) {
+    } else if (BNE.volume.contains(forceObject.p)) {
       BNE.insert(forceObject);
-    } else if (BSE.area.contains(forceObject.p)) {
+    } else if (BSE.volume.contains(forceObject.p)) {
       BSE.insert(forceObject);
-    } else if (BSW.area.contains(forceObject.p)) {
+    } else if (BSW.volume.contains(forceObject.p)) {
       BSW.insert(forceObject);
     } else {
       log.error("no home for {} in {}", forceObject, this);
@@ -158,7 +162,7 @@ public class Node<T> {
   }
 
   public Box getBounds() {
-    return area;
+    return volume;
   }
 
   public void clear() {
@@ -167,18 +171,18 @@ public class Node<T> {
   }
 
   /*
-   * Splits the Quadtree into 4 sub-QuadTrees
+   * Splits the Octtree into 4 sub-QuadTrees
    */
   protected void split() {
     if (log.isTraceEnabled()) {
       log.info("splitting {}", this);
     }
-    double width = area.width / 2;
-    double height = area.height / 2;
-    double depth = area.depth / 2;
-    double x = area.x;
-    double y = area.y;
-    double z = area.z;
+    double width = volume.width / 2;
+    double height = volume.height / 2;
+    double depth = volume.depth / 2;
+    double x = volume.x;
+    double y = volume.y;
+    double z = volume.z;
     FNE = new Node(x + width, y, z + depth, width, height, depth);
     FNW = new Node(x, y, z + depth, width, height, depth);
     FSW = new Node(x, y + height, z + depth, width, height, depth);
@@ -212,7 +216,7 @@ public class Node<T> {
       // not a leaf
       //  this node is an internal node
       //  calculate s/d
-      double s = this.area.width;
+      double s = this.volume.width;
       //      distance between the incoming node's position and
       //      the center of mass for this node
       double d = this.forceObject.p.distance(target.p);
@@ -301,7 +305,7 @@ public class Node<T> {
     } else {
       // not a leaf. this node is an internal node
       //  calculate s/d
-      double s = this.area.width;
+      double s = this.volume.width;
       //      distance between the incoming node's position and
       //      the center of mass for this node
       double d = this.forceObject.p.distance(visitor.p);
@@ -322,7 +326,6 @@ public class Node<T> {
       }
     }
   }
-
 
   static String marginIncrement = "   ";
 

@@ -6,8 +6,9 @@ import edu.uci.ics.jung.layout3d.model.Point;
 import edu.uci.ics.jung.layout3d.spatial.BarnesHutOctTree;
 import edu.uci.ics.jung.layout3d.spatial.ForceObject;
 import edu.uci.ics.jung.layout3d.spatial.Node;
-
 import java.util.Random;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Tom Nelson
@@ -17,6 +18,8 @@ public class BarnesHutFRRepulsion<N>
     extends StandardFRRepulsion<N, BarnesHutFRRepulsion<N>, BarnesHutFRRepulsion.Builder<N>>
     implements BarnesHutRepulsion<N, BarnesHutFRRepulsion<N>, BarnesHutFRRepulsion.Builder<N>> {
 
+  private static final Logger log = LoggerFactory.getLogger(BarnesHutFRRepulsion.class);
+
   public static class Builder<N>
       extends StandardFRRepulsion.Builder<
           N, BarnesHutFRRepulsion<N>, BarnesHutFRRepulsion.Builder<N>>
@@ -24,46 +27,52 @@ public class BarnesHutFRRepulsion<N>
           N, BarnesHutFRRepulsion<N>, BarnesHutFRRepulsion.Builder<N>> {
 
     private double theta = Node.DEFAULT_THETA;
-    private BarnesHutOctTree<N> tree = BarnesHutOctTree.<N>builder().build();
+    private BarnesHutOctTree<N> tree; // = BarnesHutOctTree.<N>builder().build();
 
-    public Builder<N> setLayoutModel(LayoutModel<N> layoutModel) {
+    public Builder<N> withLayoutModel(LayoutModel<N> layoutModel) {
       this.layoutModel = layoutModel;
       this.tree =
           BarnesHutOctTree.<N>builder()
-              .setBounds(layoutModel.getWidth(), layoutModel.getHeight(), layoutModel.getDepth())
-              .setTheta(theta)
+              .withBounds(
+                  -layoutModel.getWidth() / 2,
+                  -layoutModel.getHeight() / 2,
+                  -layoutModel.getDepth() / 2,
+                  layoutModel.getWidth(),
+                  layoutModel.getHeight(),
+                  layoutModel.getDepth())
+              .withTheta(theta)
               .build();
       return this;
     }
 
-    public Builder<N> setTheta(double theta) {
+    public Builder<N> withTheta(double theta) {
       this.theta = theta;
       return this;
     }
 
-        public Builder<N> setFRNodeData(LoadingCache<N, Point> frNodeData) {
-          this.frNodeData = frNodeData;
-          return this;
-        }
+    public Builder<N> withFRNodeData(LoadingCache<N, Point> frNodeData) {
+      this.frNodeData = frNodeData;
+      return this;
+    }
 
-        public Builder<N> setRepulsionConstant(double repulstionConstant) {
-          this.repulsionConstant = repulstionConstant;
-          return this;
-        }
+    public Builder<N> withRepulsionConstant(double repulstionConstant) {
+      this.repulsionConstant = repulstionConstant;
+      return this;
+    }
 
-        @Override
-        public Builder<N> setRandom(Random random) {
-          this.random = random;
-          return this;
-        }
+    @Override
+    public Builder<N> withRandom(Random random) {
+      this.random = random;
+      return this;
+    }
 
     public BarnesHutFRRepulsion<N> build() {
       return new BarnesHutFRRepulsion(this);
     }
   }
 
-    protected double EPSILON = 0.000001D;
-    private double theta = Node.DEFAULT_THETA;
+  protected double EPSILON = 0.000001D;
+  private double theta = Node.DEFAULT_THETA;
   private BarnesHutOctTree<N> tree;
 
   public static Builder barnesHutBuilder() {
@@ -108,5 +117,6 @@ public class BarnesHutFRRepulsion<N>
       tree.applyForcesTo(nodeForceObject);
       frNodeData.put(node1, nodeForceObject.f);
     }
+    log.debug("frNodeData: {}", frNodeData.asMap());
   }
 }

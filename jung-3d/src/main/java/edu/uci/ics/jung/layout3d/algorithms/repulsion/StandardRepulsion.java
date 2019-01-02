@@ -1,7 +1,6 @@
 package edu.uci.ics.jung.layout3d.algorithms.repulsion;
 
 import edu.uci.ics.jung.layout3d.model.LayoutModel;
-
 import java.util.Random;
 
 /**
@@ -15,9 +14,9 @@ public interface StandardRepulsion<
 
   interface Builder<N, R extends StandardRepulsion<N, R, B>, B extends Builder<N, R, B>> {
 
-    B setLayoutModel(LayoutModel<N> layoutModel);
+    B withLayoutModel(LayoutModel<N> layoutModel);
 
-    B setRandom(Random random);
+    B withRandom(Random random);
 
     R build();
   }

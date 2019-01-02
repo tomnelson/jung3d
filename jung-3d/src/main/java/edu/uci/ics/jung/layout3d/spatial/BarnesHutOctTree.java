@@ -3,9 +3,7 @@ package edu.uci.ics.jung.layout3d.spatial;
 import com.google.common.base.Preconditions;
 import edu.uci.ics.jung.layout3d.model.LayoutModel;
 import edu.uci.ics.jung.layout3d.model.Point;
-
 import java.util.Map;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,23 +25,23 @@ public class BarnesHutOctTree<T> {
     protected double theta = Node.DEFAULT_THETA;
     protected Box bounds;
 
-    public BarnesHutOctTree.Builder setBounds(Box bounds) {
+    public BarnesHutOctTree.Builder withBounds(Box bounds) {
       this.bounds = bounds;
       return this;
     }
 
-    public BarnesHutOctTree.Builder setBounds(
-            double x, double y, double z, double width, double height, double depth) {
-      setBounds(new Box(x, y, z, width, height, depth));
+    public BarnesHutOctTree.Builder withBounds(
+        double x, double y, double z, double width, double height, double depth) {
+      withBounds(new Box(x, y, z, width, height, depth));
       return this;
     }
 
-    public BarnesHutOctTree.Builder setBounds(double width, double height, double depth) {
-      setBounds(new Box(0, 0, 0, width, height, depth));
+    public BarnesHutOctTree.Builder withBounds(double width, double height, double depth) {
+      withBounds(new Box(0, 0, 0, width, height, depth));
       return this;
     }
 
-    public BarnesHutOctTree.Builder setTheta(double theta) {
+    public BarnesHutOctTree.Builder withTheta(double theta) {
       this.theta = theta;
       return this;
     }
@@ -56,6 +54,7 @@ public class BarnesHutOctTree<T> {
   public static <T> Builder<T> builder() {
     return new Builder<>();
   }
+
   public Box getBounds() {
     return root.getBounds();
   }
@@ -69,24 +68,8 @@ public class BarnesHutOctTree<T> {
   private Object lock = new Object();
 
   private BarnesHutOctTree(Builder<T> builder) {
-    this.root = Node.<T>builder().setVolume(builder.bounds).setTheta(builder.theta).build();
+    this.root = Node.<T>builder().withVolume(builder.bounds).withTheta(builder.theta).build();
   }
-//  /** @param layoutModel */
-//  public BarnesHutOctTree(LayoutModel<T> layoutModel) {
-//    this.layoutModel = layoutModel;
-//    int width = layoutModel.getWidth();
-//    int height = layoutModel.getHeight();
-//    int depth = layoutModel.getDepth();
-//    this.root =
-//        new Node<>(
-//            new Box(
-//                -width / 2,
-//                -height / 2,
-//                -depth / 2,
-//                layoutModel.getWidth(),
-//                layoutModel.getHeight(),
-//                layoutModel.getDepth()));
-//  }
 
   /*
    * Clears the quadtree
@@ -99,8 +82,7 @@ public class BarnesHutOctTree<T> {
    * visit nodes in the quad tree and accumulate the forces to apply to the element for the passed
    * node
    *
-   * @param node
-//   * @param userData
+   * @param node // * @param userData
    */
   public void visit(ForceObject<T> node) {
     if (root != null && root.forceObject != node) {
@@ -128,24 +110,13 @@ public class BarnesHutOctTree<T> {
       }
     }
   }
+
   public void applyForcesTo(ForceObject<T> visitor) {
     Preconditions.checkArgument(visitor != null, "Cannot apply forces to a null ForceObject");
     if (root != null && root.forceObject != visitor) {
       root.applyForcesTo(visitor);
     }
   }
-
-//  public void rebuild() {
-//    clear();
-//    synchronized (lock) {
-//      for (T node : layoutModel.getGraph().nodes()) {
-//        Point p = layoutModel.apply(node);
-//        ForceObject<T> forceObject = new ForceObject<T>(node, p);
-//        log.trace("insert {}", forceObject);
-//        insert(forceObject);
-//      }
-//    }
-//  }
 
   @Override
   public String toString() {

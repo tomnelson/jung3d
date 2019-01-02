@@ -15,9 +15,9 @@ public interface BarnesHutRepulsion<
   interface Builder<N, R extends BarnesHutRepulsion<N, R, B>, B extends Builder<N, R, B>>
       extends StandardRepulsion.Builder<N, R, B> {
 
-    B setLayoutModel(LayoutModel<N> layoutModel);
+    B withLayoutModel(LayoutModel<N> layoutModel);
 
-    B setTheta(double theta);
+    B withTheta(double theta);
 
     R build();
   }
