@@ -32,10 +32,6 @@ public class LoadingCacheLayoutModel<N> extends AbstractLayoutModel<N>
    */
   public static class Builder<N, T extends LoadingCacheLayoutModel<N>, B extends Builder<N, T, B>>
       extends AbstractLayoutModel.Builder<N, T, B> {
-    protected Graph<N> graph;
-    protected int width;
-    protected int height;
-    protected int depth;
 
     protected LoadingCache<N, Point> locations =
         CacheBuilder.newBuilder().build(CacheLoader.from(() -> Point.ORIGIN));

@@ -23,38 +23,31 @@ public class AnimationLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorith
   LayoutAlgorithm<N> endLayoutAlgorithm;
   LayoutModel<N> layoutModel;
 
-  public static class Builder<N> extends AbstractIterativeLayoutAlgorithm.Builder {
+  public static class Builder<N, T extends AnimationLayoutAlgorithm<N>, B extends Builder<N, T, B>>
+          extends AbstractIterativeLayoutAlgorithm.Builder<N, T, B> {
 
     private VisualizationViewer<N, ?> visualizationServer;
     private LayoutAlgorithm<N> endLayoutAlgorithm;
     private boolean shouldPrerelax = false;
 
-    public Builder withVisualizationServer(VisualizationViewer<N, ?> visualizationServer) {
+    public B withVisualizationServer(VisualizationViewer<N, ?> visualizationServer) {
       this.visualizationServer = visualizationServer;
-      return this;
+      return (B) this;
     }
 
-    public Builder withEndLayoutAlgorithm(LayoutAlgorithm<N> endLayoutAlgorithm) {
+    public B withEndLayoutAlgorithm(LayoutAlgorithm<N> endLayoutAlgorithm) {
       this.endLayoutAlgorithm = endLayoutAlgorithm;
-      return this;
+      return (B) this;
     }
 
     @Override
-    public Builder shouldPrerelax(boolean shouldPrerelax) {
+    public B shouldPrerelax(boolean shouldPrerelax) {
       this.shouldPrerelax = shouldPrerelax;
-      return this;
+      return (B) this;
     }
 
-    public VisualizationViewer<N, ?> getVisualizationServer() {
-      return visualizationServer;
-    }
-
-    public LayoutAlgorithm<N> getEndLayoutAlgorithm() {
-      return endLayoutAlgorithm;
-    }
-
-    public AnimationLayoutAlgorithm<N> build() {
-      return new AnimationLayoutAlgorithm<>(this);
+    public T build() {
+      return (T) new AnimationLayoutAlgorithm<>(this);
     }
   }
 

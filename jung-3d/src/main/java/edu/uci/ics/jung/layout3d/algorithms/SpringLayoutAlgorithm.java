@@ -33,34 +33,33 @@ public class SpringLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N
   protected StandardSpringRepulsion.Builder repulsionContractBuilder;
   protected StandardSpringRepulsion repulsionContract;
 
-  public static class Builder<N>
-      extends AbstractIterativeLayoutAlgorithm.Builder<N, SpringLayoutAlgorithm<N>, Builder<N>> {
+  public static class Builder<N, T extends SpringLayoutAlgorithm<N>, B extends Builder<N, T, B>>
+      extends AbstractIterativeLayoutAlgorithm.Builder<N, T, B> {
     private StandardSpringRepulsion.Builder repulsionContractBuilder =
         StandardSpringRepulsion.standardBuilder();
     private Function<? super EndpointPair<N>, Integer> lengthFunction = n -> 30;
 
-    public Builder<N> withRepulsionContractBuilder(
+    public B withRepulsionContractBuilder(
         StandardSpringRepulsion.Builder repulsionContractBuilder) {
       this.repulsionContractBuilder = (StandardSpringRepulsion.Builder) repulsionContractBuilder;
-      return this;
+      return (B) this;
     }
 
-    public Builder<N> withLengthFunction(
-        Function<? super EndpointPair<N>, Integer> lengthFunction) {
+    public B withLengthFunction(Function<? super EndpointPair<N>, Integer> lengthFunction) {
       this.lengthFunction = lengthFunction;
-      return this;
+      return (B) this;
     }
 
-    public SpringLayoutAlgorithm<N> build() {
-      return new SpringLayoutAlgorithm(this);
+    public T build() {
+      return (T) new SpringLayoutAlgorithm(this);
     }
   }
 
-  public static <N> Builder<N> builder() {
-    return new Builder<N>();
+  public static Builder builder() {
+    return new Builder();
   }
 
-  protected SpringLayoutAlgorithm(Builder<N> builder) {
+  protected SpringLayoutAlgorithm(Builder builder) {
     super(builder);
     this.lengthFunction = builder.lengthFunction;
     this.repulsionContractBuilder = builder.repulsionContractBuilder;

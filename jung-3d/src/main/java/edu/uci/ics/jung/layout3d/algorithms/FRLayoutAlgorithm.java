@@ -67,27 +67,27 @@ public class FRLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N>
   protected StandardFRRepulsion.Builder repulsionContractBuilder;
   protected StandardFRRepulsion repulsionContract;
 
-  public static class Builder<N>
-      extends AbstractIterativeLayoutAlgorithm.Builder<N, FRLayoutAlgorithm<N>, Builder<N>> {
+  public static class Builder<N, T extends FRLayoutAlgorithm<N>, B extends Builder<N, T, B>>
+      extends AbstractIterativeLayoutAlgorithm.Builder<N, T, B> {
+    // default repulsion is StandardFRRepulsion
     private StandardFRRepulsion.Builder repulsionContractBuilder =
         new StandardFRRepulsion.Builder();
 
-    public Builder<N> withRepulsionContractBuilder(
-        StandardFRRepulsion.Builder repulsionContractBuilder) {
+    public B withRepulsionContractBuilder(StandardFRRepulsion.Builder repulsionContractBuilder) {
       this.repulsionContractBuilder = repulsionContractBuilder;
-      return this;
+      return (B) this;
     }
 
-    public FRLayoutAlgorithm<N> build() {
-      return new FRLayoutAlgorithm(this);
+    public T build() {
+      return (T) new FRLayoutAlgorithm(this);
     }
   }
 
-  public static <N> Builder<N> builder() {
-    return new Builder<>();
+  public static Builder builder() {
+    return new Builder();
   }
 
-  protected FRLayoutAlgorithm(Builder<N> builder) {
+  protected FRLayoutAlgorithm(Builder builder) {
     super(builder);
     this.repulsionContractBuilder = builder.repulsionContractBuilder;
   }
