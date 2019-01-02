@@ -30,7 +30,8 @@ public class LoadingCacheLayoutModel<N> extends AbstractLayoutModel<N>
    * @param <N> the node type
    * @param <T> the type of the superclass of the LayoutModel to be built
    */
-  public abstract static class Builder<N, T extends LoadingCacheLayoutModel<N>> {
+  public static class Builder<N, T extends LoadingCacheLayoutModel<N>, B extends Builder<N, T, B>>
+      extends AbstractLayoutModel.Builder<N, T, B> {
     protected Graph<N> graph;
     protected int width;
     protected int height;
@@ -40,41 +41,16 @@ public class LoadingCacheLayoutModel<N> extends AbstractLayoutModel<N>
         CacheBuilder.newBuilder().build(CacheLoader.from(() -> Point.ORIGIN));
 
     /**
-     * set the Graph to use for the LayoutModel
-     *
-     * @param graph
-     * @return this builder for further use
-     */
-    public LoadingCacheLayoutModel.Builder<N, T> setGraph(Graph<N> graph) {
-      this.graph = graph;
-      return this;
-    }
-
-    /**
      * set the LayoutModel to copy with this builder
      *
      * @param layoutModel
      * @return this builder for further use
      */
-    public LoadingCacheLayoutModel.Builder<N, T> setLayoutModel(LayoutModel<N> layoutModel) {
+    public B withLayoutModel(LayoutModel<N> layoutModel) {
       this.width = layoutModel.getWidth();
       this.height = layoutModel.getHeight();
       this.depth = layoutModel.getDepth();
-      return this;
-    }
-
-    /**
-     * sets the size that will be used for the LayoutModel
-     *
-     * @param width
-     * @param height
-     * @return the LayoutModel.Builder being built
-     */
-    public LoadingCacheLayoutModel.Builder<N, T> setSize(int width, int height, int depth) {
-      this.width = width;
-      this.height = height;
-      this.depth = depth;
-      return this;
+      return (B) this;
     }
 
     /**
@@ -83,10 +59,10 @@ public class LoadingCacheLayoutModel<N> extends AbstractLayoutModel<N>
      * @param initializer
      * @return the builder
      */
-    public LoadingCacheLayoutModel.Builder<N, T> setInitializer(Function<N, Point> initializer) {
+    public B withInitializer(Function<N, Point> initializer) {
       Function<N, Point> chain = initializer.andThen(p -> Point.of(p.x, p.y, p.z));
       this.locations = CacheBuilder.newBuilder().build(CacheLoader.from(chain::apply));
-      return this;
+      return (B) this;
     }
 
     /**
@@ -94,23 +70,20 @@ public class LoadingCacheLayoutModel<N> extends AbstractLayoutModel<N>
      *
      * @return
      */
-    public abstract T build();
+    public T build() {
+      return (T) new LoadingCacheLayoutModel(this);
+    }
   }
 
-  public static <N> Builder<N, ?> builder() {
-    return new Builder<N, LoadingCacheLayoutModel<N>>() {
-      @Override
-      public LoadingCacheLayoutModel<N> build() {
-        return new LoadingCacheLayoutModel<>(this);
-      }
-    };
+  public static <N> Builder<N, ?, ?> builder() {
+    return new Builder();
   }
 
   public static <N, P> LoadingCacheLayoutModel<N> from(LoadingCacheLayoutModel<N> other) {
     return new LoadingCacheLayoutModel<>(other);
   }
 
-  protected LoadingCacheLayoutModel(LoadingCacheLayoutModel.Builder<N, ?> builder) {
+  protected LoadingCacheLayoutModel(LoadingCacheLayoutModel.Builder<N, ?, ?> builder) {
     super(builder.graph, builder.width, builder.height, builder.depth);
     this.locations = builder.locations;
   }

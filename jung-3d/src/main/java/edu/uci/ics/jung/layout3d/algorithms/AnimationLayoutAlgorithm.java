@@ -75,9 +75,9 @@ public class AnimationLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorith
     // create a LayoutModel to hold points for the transition
     this.transitionLayoutModel =
         LoadingCacheLayoutModel.<N>builder()
-            .setGraph(visualizationServer.getNetwork().asGraph())
-            .setLayoutModel(layoutModel)
-            .setInitializer(layoutModel)
+            .withGraph(visualizationServer.getNetwork().asGraph())
+            .withLayoutModel(layoutModel)
+            .withInitializer(layoutModel)
             .build();
     // start off the transitionLayoutModel with the endLayoutAlgorithm
     transitionLayoutModel.accept(endLayoutAlgorithm);

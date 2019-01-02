@@ -84,7 +84,7 @@ public class FRLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N>
   }
 
   public static <N> Builder<N> builder() {
-    return new Builder<N>();
+    return new Builder<>();
   }
 
   protected FRLayoutAlgorithm(Builder<N> builder) {

@@ -30,6 +30,41 @@ public abstract class AbstractLayoutModel<N>
 
   private static final Logger log = LoggerFactory.getLogger(AbstractLayoutModel.class);
 
+  public abstract static class Builder<
+      N, T extends AbstractLayoutModel<N>, B extends Builder<N, T, B>> {
+    protected Graph<N> graph;
+    protected int width;
+    protected int height;
+    protected int depth;
+
+    public B withGraph(Graph<N> graph) {
+      this.graph = graph;
+      return (B) this;
+    }
+
+    public B withSize(int width, int height, int depth) {
+      this.width = width;
+      this.height = height;
+      this.depth = depth;
+      return (B) this;
+    }
+
+    public B withWidth(int width) {
+      this.width = width;
+      return (B) this;
+    }
+
+    public B withHeight(int height) {
+      this.height = height;
+      return (B) this;
+    }
+
+    public B withDepth(int depth) {
+      this.depth = depth;
+      return (B) this;
+    }
+  }
+
   private Set<N> lockedNodes = Sets.newHashSet();
   protected boolean locked;
   protected int width;
@@ -45,6 +80,11 @@ public abstract class AbstractLayoutModel<N>
   private List<LayoutChangeListener<N>> layoutChangeListeners = Lists.newArrayList();
   protected LayoutModel.LayoutStateChangeSupport layoutStateChangeSupport =
       new DefaultLayoutStateChangeSupport();
+
+  protected AbstractLayoutModel(Builder builder) {
+    this.graph = builder.graph;
+    setSize(builder.width, builder.height, builder.depth);
+  }
 
   protected AbstractLayoutModel(Graph<N> graph, int width, int height, int depth) {
     this.graph = graph;
@@ -156,7 +196,7 @@ public abstract class AbstractLayoutModel<N>
   public void setGraph(Graph<N> graph) {
     this.graph = graph;
     if (log.isTraceEnabled()) {
-      log.trace("setGraph to n:{} e:{}", graph.nodes(), graph.edges());
+      log.trace("withGraph to n:{} e:{}", graph.nodes(), graph.edges());
     }
   }
 

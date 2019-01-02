@@ -138,7 +138,6 @@ public class GraphDemo extends JPanel {
         break;
       case FRLAYOUT:
         layoutAlgorithm = FRLayoutAlgorithm.builder().build();
-        //new FRLayoutAlgorithm();
         break;
       case FRBHLAYOUT:
         layoutAlgorithm =

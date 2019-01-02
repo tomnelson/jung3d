@@ -149,9 +149,9 @@ public class VisualizationViewer<N, E> extends JPanel {
     LayoutModel<N> layoutModel =
         this.layoutModel =
             LoadingCacheLayoutModel.<N>builder()
-                .setGraph(graph)
-                .setSize(600, 600, 600)
-                .setInitializer(
+                .withGraph(graph)
+                .withSize(600, 600, 600)
+                .withInitializer(
                     new RandomLocationTransformer<N>(600, 600, 600, System.currentTimeMillis()))
                 .build();
 
