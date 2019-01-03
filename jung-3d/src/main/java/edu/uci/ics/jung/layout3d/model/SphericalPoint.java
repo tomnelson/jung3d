@@ -113,14 +113,14 @@ public class SphericalPoint {
     double r = Math.sqrt(p.x*p.x + p.y*p.y + p.x*p.x);
     return SphericalPoint.of(
             r,
-            Math.atan(p.y/p.x),
+            Math.atan2(p.y,p.x),
             Math.acos(p.z/r)
     );
 
   }
   public static Point toCartesian(SphericalPoint sp) {
     return Point.of(
-            sp.r*Math.cos(sp.theta)*Math.cos(sp.phi),
+            sp.r*Math.sin(sp.theta)*Math.cos(sp.phi),
             sp.r*Math.sin(sp.theta)*Math.sin(sp.phi),
             sp.r*Math.cos(sp.theta)
     );
