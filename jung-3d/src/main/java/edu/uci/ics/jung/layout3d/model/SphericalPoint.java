@@ -30,58 +30,6 @@ public class SphericalPoint {
     this.phi = phi;
   }
 
-  public SphericalPoint add(SphericalPoint other) {
-    return add(other.x, other.y, other.z);
-  }
-
-  public SphericalPoint add(double dx, double dy, double dz) {
-    return new SphericalPoint(x + dx, y + dy, z + dz);
-  }
-
-  public double distanceSquared(SphericalPoint other) {
-    return distanceSquared(other.x, other.y, other.z);
-  }
-
-  public double distanceSquared(double ox, double oy, double oz) {
-    double dx = x - ox;
-    double dy = y - oy;
-    double dz = z - oz;
-    return dx * dx + dy * dy + dz * dz;
-  }
-
-  public boolean inside(Sphere c) {
-    //  fast-fail bounds check
-    if (!inside(
-        c.center.x - c.radius,
-        c.center.y - c.radius,
-        c.center.z - c.radius,
-        c.center.x + c.radius,
-        c.center.y + c.radius,
-        c.center.z + c.radius)) {
-      return false;
-    }
-    return c.center.distance(this) <= c.radius;
-  }
-
-  public boolean inside(Box r) {
-    return inside(r.x, r.y, r.z, r.maxX, r.maxY, r.maxZ);
-  }
-
-  public boolean inside(
-      double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
-    if (x < minX || maxX < x || y < minY || maxY < y || z < minZ || maxZ < z) {
-      return false;
-    }
-    return true;
-  }
-
-  public double length() {
-    return r;
-  }
-
-  public double distance(SphericalPoint other) {
-    return Math.sqrt(distanceSquared(other));
-  }
 
   @Override
   public boolean equals(Object o) {
@@ -94,19 +42,19 @@ public class SphericalPoint {
 
     SphericalPoint other = (SphericalPoint) o;
 
-    return (Double.compare(other.x, x) == 0
-        && Double.compare(other.y, y) == 0
-        && Double.compare(other.z, z) == 0);
+    return (Double.compare(other.r, r) == 0
+        && Double.compare(other.theta, theta) == 0
+        && Double.compare(other.phi, phi) == 0);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(x, y, z);
+    return Objects.hash(r, theta, phi);
   }
 
   @Override
   public String toString() {
-    return "Point{" + "x=" + x + ", y=" + y + ", z=" + z + '}';
+    return "Point{" + "r=" + r + ", theta=" + theta + ", phi=" + phi + '}';
   }
 
   public static SphericalPoint fromCartesian(Point p) {

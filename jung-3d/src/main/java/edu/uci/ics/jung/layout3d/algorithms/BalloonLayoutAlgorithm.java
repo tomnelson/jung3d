@@ -105,29 +105,6 @@ public class BalloonLayoutAlgorithm<N> implements Spherical, LayoutAlgorithm<N> 
       buildTree(node);
     }
   }
-//https://www.cmu.edu/biolphys/deserno/pdf/sphere_equi.pdf
-  protected void distributeOnSphere(Collection<N> nodes, Point center, double radius) {
-    int ncount = 0;
-    Iterator<N> iterator = nodes.iterator();
-    double a = 4*Math.PI*radius*radius / nodes.size();
-    double d = Math.sqrt(a);
-    double mtheta = Math.round(Math.PI / d);
-    double dtheta = Math.PI / mtheta;
-    double dphi = a / dtheta;
-    for (int m=0; m<mtheta; m++) {
-      double theta = Math.PI * (m  + 0.5) / mtheta;
-      double mphi = Math.round(2*Math.PI*Math.sin(theta)/dphi);
-      for (int n=0; n< mphi; n++) {
-        double phi = 2 * Math.PI * n / mphi;
-        Point p = Point.of(
-                center.x + radius*Math.sin(theta)*Math.cos(phi),
-                center.y + radius * Math.sin(theta)*Math.sin(phi),
-                center.z + radius*Math.cos(theta)
-        );
-        layoutModel.set(iterator.next(), p);
-      }
-    }
-  }
 
   protected void arrangeInSphere(Collection<N> nodes, Point center, double radius) {
     sphereLocations.put(center, (int) radius);

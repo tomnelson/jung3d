@@ -59,28 +59,29 @@ public class SphereLayoutAlgorithm<N> implements Spherical, LayoutAlgorithm<N> {
   protected void arrangeInSphere(LayoutModel<N> layoutModel, double radius) {
 
     Collection<N> nodes = layoutModel.getGraph().nodes();
-    int i = 0;
-    double offset = 2.0 / nodes.size();
-    int count = nodes.size();
-    double rnd = 1.0;
-    double increment = Math.PI * (3. - Math.sqrt(5.));
-    for (N node : nodes) {
-
-      double y = ((i * offset) - 1) + (offset / 2);
-      double r = Math.sqrt(1 - Math.pow(y, 2));
-
-      double phi = ((i + rnd) % count) * increment;
-
-      double x = Math.cos(phi) * r;
-      double z = Math.sin(phi) * r;
-
-      x *= radius;
-      y *= radius;
-      z *= radius;
-      layoutModel.set(node, Point.of(x, y, z));
-      log.debug("placed {} at {}", node, layoutModel.apply(node));
-      i++;
-    }
+    Spherical.distribute(layoutModel, nodes, Point.ORIGIN, radius);
+//    int i = 0;
+//    double offset = 2.0 / nodes.size();
+//    int count = nodes.size();
+//    double rnd = 1.0;
+//    double increment = Math.PI * (3. - Math.sqrt(5.));
+//    for (N node : nodes) {
+//
+//      double y = ((i * offset) - 1) + (offset / 2);
+//      double r = Math.sqrt(1 - Math.pow(y, 2));
+//
+//      double phi = ((i + rnd) % count) * increment;
+//
+//      double x = Math.cos(phi) * r;
+//      double z = Math.sin(phi) * r;
+//
+//      x *= radius;
+//      y *= radius;
+//      z *= radius;
+//      layoutModel.set(node, Point.of(x, y, z));
+//      log.debug("placed {} at {}", node, layoutModel.apply(node));
+//      i++;
+//    }
   }
 
   @Override
