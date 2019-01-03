@@ -107,6 +107,7 @@ public class StandardFRRepulsion<
             double dz = p1.z - p2.z;
 
             double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+            if (dist == 0) dist = 0.001;
 
             double force = (repulsionConstant * repulsionConstant) / dist;
 

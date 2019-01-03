@@ -17,6 +17,12 @@ public class Point {
   }
 
   private Point(double x, double y, double z) {
+    if (Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z)) {
+      this.x = 0;
+      this.y = 0;
+      this.z = 0;
+      return;
+    }
     this.x = x;
     this.y = y;
     this.z = z;

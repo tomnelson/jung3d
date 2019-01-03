@@ -32,7 +32,7 @@ public class TreeDemo extends JPanel {
     super(new BorderLayout());
 
     this.tree = this.createTree();
-    //    growTree();
+//        growTree();
 
     JPanel vvHolder = new JPanel();
     vvHolder.setLayout(new GridLayout(1, 1));
@@ -69,7 +69,7 @@ public class TreeDemo extends JPanel {
 
   private MutableCTreeNetwork<Object, Object> growTree() {
     int count = 0;
-    String[] nodes = {"a", "b", "c", "d", "e", "f", "g"}; //,"h","i","j","k","l","m"};
+    String[] nodes = {"a", "b", "c", "d", "e", "f", "g","h","i","j","k","l","m","n","o","p","q","r","s"};
     MutableCTreeNetwork<Object, Object> tree =
         TreeNetworkBuilder.builder().expectedNodeCount(50).build();
 
@@ -112,6 +112,21 @@ public class TreeDemo extends JPanel {
     tree.addEdge("A0", "A1", edgeId++);
     tree.addEdge("A0", "A2", edgeId++);
     tree.addEdge("A0", "A3", edgeId++);
+    tree.addEdge("A0", "A4", edgeId++);
+    tree.addEdge("A0", "A5", edgeId++);
+    tree.addEdge("A0", "A6", edgeId++);
+    tree.addEdge("A0", "A7", edgeId++);
+    tree.addEdge("A0", "A8", edgeId++);
+    tree.addEdge("A0", "A9", edgeId++);
+    tree.addEdge("A0", "A10", edgeId++);
+    tree.addEdge("A0", "A20", edgeId++);
+    tree.addEdge("A0", "A30", edgeId++);
+    tree.addEdge("A0", "A40", edgeId++);
+    tree.addEdge("A0", "A50", edgeId++);
+    tree.addEdge("A0", "A60", edgeId++);
+    tree.addEdge("A0", "A70", edgeId++);
+    tree.addEdge("A0", "A80", edgeId++);
+    tree.addEdge("A0", "A90", edgeId++);
 
     tree.addEdge("root", "B0", edgeId++);
     tree.addEdge("B0", "B1", edgeId++);

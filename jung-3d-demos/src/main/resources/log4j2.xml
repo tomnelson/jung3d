@@ -15,7 +15,7 @@
          <Logger name="edu.uci.ics.jung.visualization3d.VisualizationViewer" additivity="false" level="info">
             <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name="edu.uci.ics.jung.layout3d.algorithms" additivity="false" level="debug">
+        <Logger name="edu.uci.ics.jung.layout3d.algorithms" additivity="false" level="info">
             <AppenderRef ref="Console"/>
         </Logger>
         <Logger name="edu.uci.ics.jung.visualization3d.layout.util" additivity="false" level="debug">
