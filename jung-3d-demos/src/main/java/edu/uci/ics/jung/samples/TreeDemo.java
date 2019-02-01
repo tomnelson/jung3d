@@ -32,7 +32,7 @@ public class TreeDemo extends JPanel {
     super(new BorderLayout());
 
     this.tree = this.createTree();
-//        growTree();
+    //        growTree();
 
     JPanel vvHolder = new JPanel();
     vvHolder.setLayout(new GridLayout(1, 1));
@@ -69,7 +69,9 @@ public class TreeDemo extends JPanel {
 
   private MutableCTreeNetwork<Object, Object> growTree() {
     int count = 0;
-    String[] nodes = {"a", "b", "c", "d", "e", "f", "g","h","i","j","k","l","m","n","o","p","q","r","s"};
+    String[] nodes = {
+      "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s"
+    };
     MutableCTreeNetwork<Object, Object> tree =
         TreeNetworkBuilder.builder().expectedNodeCount(50).build();
 
@@ -99,14 +101,14 @@ public class TreeDemo extends JPanel {
     tree.addEdge("root", "V0", edgeId++);
     tree.addEdge("V0", "V1", edgeId++);
     tree.addEdge("V0", "V2", edgeId++);
-    tree.addEdge("V1", "V4", edgeId++);
-    tree.addEdge("V2", "V3", edgeId++);
-    tree.addEdge("V2", "V5", edgeId++);
-    tree.addEdge("V4", "V6", edgeId++);
-    tree.addEdge("V4", "V7", edgeId++);
-    tree.addEdge("V3", "V8", edgeId++);
-    tree.addEdge("V6", "V9", edgeId++);
-    tree.addEdge("V4", "V10", edgeId++);
+    tree.addEdge("V0", "V4", edgeId++);
+    tree.addEdge("V0", "V3", edgeId++);
+    tree.addEdge("V0", "V5", edgeId++);
+    tree.addEdge("V0", "V6", edgeId++);
+    tree.addEdge("V0", "V7", edgeId++);
+    tree.addEdge("V0", "V8", edgeId++);
+    tree.addEdge("V0", "V9", edgeId++);
+    tree.addEdge("V0", "V10", edgeId++);
 
     tree.addEdge("root", "A0", edgeId++);
     tree.addEdge("A0", "A1", edgeId++);
@@ -131,35 +133,35 @@ public class TreeDemo extends JPanel {
     tree.addEdge("root", "B0", edgeId++);
     tree.addEdge("B0", "B1", edgeId++);
     tree.addEdge("B0", "B2", edgeId++);
-    tree.addEdge("B1", "B4", edgeId++);
-    tree.addEdge("B2", "B3", edgeId++);
-    tree.addEdge("B2", "B5", edgeId++);
-    tree.addEdge("B4", "B6", edgeId++);
-    tree.addEdge("B4", "B7", edgeId++);
-    tree.addEdge("B3", "B8", edgeId++);
-    tree.addEdge("B6", "B9", edgeId++);
+    tree.addEdge("B0", "B4", edgeId++);
+    tree.addEdge("B0", "B3", edgeId++);
+    tree.addEdge("B0", "B5", edgeId++);
+    tree.addEdge("B0", "B6", edgeId++);
+    tree.addEdge("B0", "B7", edgeId++);
+    tree.addEdge("B0", "B8", edgeId++);
+    tree.addEdge("B0", "B9", edgeId++);
 
     tree.addEdge("root", "C0", edgeId++);
     tree.addEdge("C0", "C1", edgeId++);
     tree.addEdge("C0", "C2", edgeId++);
-    tree.addEdge("C1", "C4", edgeId++);
-    tree.addEdge("C2", "C3", edgeId++);
-    tree.addEdge("C2", "C5", edgeId++);
-    tree.addEdge("C4", "C6", edgeId++);
-    tree.addEdge("C4", "C7", edgeId++);
-    tree.addEdge("C3", "C8", edgeId++);
-    tree.addEdge("C6", "C9", edgeId++);
+    tree.addEdge("C0", "C4", edgeId++);
+    tree.addEdge("C0", "C3", edgeId++);
+    tree.addEdge("C0", "C5", edgeId++);
+    tree.addEdge("C0", "C6", edgeId++);
+    tree.addEdge("C0", "C7", edgeId++);
+    tree.addEdge("C0", "C8", edgeId++);
+    tree.addEdge("C0", "C9", edgeId++);
 
     tree.addEdge("root", "D0", edgeId++);
     tree.addEdge("D0", "D1", edgeId++);
     tree.addEdge("D0", "D2", edgeId++);
-    tree.addEdge("D1", "D4", edgeId++);
-    tree.addEdge("D2", "D3", edgeId++);
-    tree.addEdge("D2", "D5", edgeId++);
-    tree.addEdge("D4", "D6", edgeId++);
-    tree.addEdge("D4", "D7", edgeId++);
-    tree.addEdge("D3", "D8", edgeId++);
-    tree.addEdge("D6", "D9", edgeId++);
+    tree.addEdge("D0", "D4", edgeId++);
+    tree.addEdge("D0", "D3", edgeId++);
+    tree.addEdge("D0", "D5", edgeId++);
+    tree.addEdge("D0", "D6", edgeId++);
+    tree.addEdge("D0", "D7", edgeId++);
+    tree.addEdge("D0", "D8", edgeId++);
+    tree.addEdge("D0", "D9", edgeId++);
 
     return tree;
   }

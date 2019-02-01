@@ -39,7 +39,7 @@ public class ISOMLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorithm<N>
   private static final Logger log = LoggerFactory.getLogger(ISOMLayoutAlgorithm.class);
 
   public static class Builder<N, T extends ISOMLayoutAlgorithm<N>, B extends Builder<N, T, B>>
-          extends AbstractIterativeLayoutAlgorithm.Builder<N, T, B> {
+      extends AbstractIterativeLayoutAlgorithm.Builder<N, T, B> {
 
     public T build() {
       return (T) new ISOMLayoutAlgorithm<>(this);

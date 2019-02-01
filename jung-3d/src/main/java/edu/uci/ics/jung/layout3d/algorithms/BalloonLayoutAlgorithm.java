@@ -94,7 +94,7 @@ public class BalloonLayoutAlgorithm<N> implements Spherical, LayoutAlgorithm<N> 
     Collection<N> kids = tree.successors(root);
     if (kids.size() > 0) {
       Point center = layoutModel.get(root);
-      int subDepth = depth / (1 + getDepth(tree, root));
+      int subDepth = depth / (1 + 2 * getDepth(tree, root));
       arrangeInSphere(kids, center, subDepth);
       buildTrees(kids);
     }

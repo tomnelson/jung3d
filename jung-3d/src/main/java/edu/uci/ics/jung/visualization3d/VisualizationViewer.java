@@ -25,6 +25,7 @@ import com.sun.j3d.utils.picking.behaviors.PickTranslateBehavior;
 import com.sun.j3d.utils.picking.behaviors.PickingCallback;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 import edu.uci.ics.jung.layout3d.algorithms.LayoutAlgorithm;
+import edu.uci.ics.jung.layout3d.event.LayoutChange;
 import edu.uci.ics.jung.layout3d.model.LayoutModel;
 import edu.uci.ics.jung.layout3d.model.LoadingCacheLayoutModel;
 import edu.uci.ics.jung.layout3d.model.Point;
@@ -68,7 +69,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** @author Tom Nelson */
-public class VisualizationViewer<N, E> extends JPanel {
+public class VisualizationViewer<N, E> extends JPanel
+        implements LayoutChange.Listener, // can tell the view to repaint
+        LayoutChange.Producer {
 
   private static final Logger log = LoggerFactory.getLogger(VisualizationViewer.class);
   BranchGroup objRoot;
@@ -90,6 +93,8 @@ public class VisualizationViewer<N, E> extends JPanel {
   }
 
   LayoutAlgorithm<N> layoutAlgorithm;
+
+  protected LayoutChange.Support changeSupport = LayoutChange.Support.create();
 
   /**
    * a listener used to cause pick events to result in repaints, even if they come from another view
@@ -356,6 +361,7 @@ public class VisualizationViewer<N, E> extends JPanel {
     if (forceUpdate && this.layoutAlgorithm != null) {
       layoutModel.accept(this.layoutAlgorithm);
       //      changeSupport.fireStateChanged();
+      changeSupport.fireLayoutChanged();
     }
     init(network.asGraph());
   }
@@ -365,9 +371,9 @@ public class VisualizationViewer<N, E> extends JPanel {
     if (layoutAlgorithm != null) {
       this.layoutModel.accept(layoutAlgorithm);
       removeSpheres();
-      if (layoutAlgorithm instanceof Spherical) {
-        addSpheres(layoutAlgorithm);
-      }
+      //      if (layoutAlgorithm instanceof Spherical) {
+      //        addSpheres(layoutAlgorithm);
+      //      }
     }
   }
 
@@ -466,8 +472,8 @@ public class VisualizationViewer<N, E> extends JPanel {
     this.graphBranch = branch;
     objTrans.addChild(this.graphBranch);
 
-    if (layoutModel instanceof ChangeEventSupport) {
-      ((ChangeEventSupport) layoutModel).addChangeListener(e -> mapGraph(graph));
+    if (layoutModel instanceof LayoutChange.Support) {
+      ((LayoutChange.Support) layoutModel).addLayoutChangeListener(this);
     } else {
       mapGraph(graph);
     }
@@ -525,5 +531,15 @@ public class VisualizationViewer<N, E> extends JPanel {
   /** @return the renderContext */
   public RenderContext<N, EndpointPair<N>> getRenderContext() {
     return renderContext;
+  }
+
+  @Override
+  public LayoutChange.Support getLayoutChangeSupport() {
+    return this.changeSupport;
+  }
+
+  @Override
+  public void layoutChanged() {
+    getLayoutChangeSupport().fireLayoutChanged();
   }
 }

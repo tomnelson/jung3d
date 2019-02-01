@@ -3,7 +3,6 @@ package edu.uci.ics.jung.layout3d.model;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.graph.Graph;
 import edu.uci.ics.jung.layout.util.Caching;
 import java.util.Map;
 import java.util.function.Function;
@@ -56,8 +55,9 @@ public class LoadingCacheLayoutModel<N> extends AbstractLayoutModel<N>
      * @return the builder
      */
     public B withInitializer(Function<N, Point> initializer) {
-      Function<N, Point> chain = initializer.andThen(p -> Point.of(p.x, p.y, p.z));
-      this.locations = CacheBuilder.newBuilder().build(CacheLoader.from(chain::apply));
+      //      Function<N, Point> chain = initializer.andThen(p -> Point.of(p.x, p.y, p.z));
+      //      this.locations = CacheBuilder.newBuilder().build(CacheLoader.from(chain::apply));
+      this.locations = CacheBuilder.newBuilder().build(CacheLoader.from(initializer::apply));
       return (B) this;
     }
 
@@ -75,7 +75,7 @@ public class LoadingCacheLayoutModel<N> extends AbstractLayoutModel<N>
     return new Builder();
   }
 
-  public static <N, P> LoadingCacheLayoutModel<N> from(LoadingCacheLayoutModel<N> other) {
+  public static <N> LoadingCacheLayoutModel<N> from(LoadingCacheLayoutModel<N> other) {
     return new LoadingCacheLayoutModel<>(other);
   }
 
@@ -89,19 +89,20 @@ public class LoadingCacheLayoutModel<N> extends AbstractLayoutModel<N>
   }
 
   public void setInitializer(Function<N, Point> initializer) {
-    Function<N, Point> chain = initializer.andThen(p -> Point.of(p.x, p.y, p.z));
-    this.locations = CacheBuilder.newBuilder().build(CacheLoader.from(chain::apply));
+    //    Function<N, Point> chain = initializer.andThen(p -> Point.of(p.x, p.y, p.z));
+    //    this.locations = CacheBuilder.newBuilder().build(CacheLoader.from(chain::apply));
+    this.locations = CacheBuilder.newBuilder().build(CacheLoader.from(initializer::apply));
   }
 
   public Map<N, Point> getLocations() {
     return locations.asMap();
   }
 
-  @Override
-  public void setGraph(Graph<N> graph) {
-    super.setGraph(graph);
-    changeSupport.fireChanged();
-  }
+  //  @Override
+  //  public void setGraph(Graph<N> graph) {
+  //    super.setGraph(graph);
+  //    changeSupport.fireChanged();
+  //  }
 
   @Override
   public void set(N node, Point location) {
