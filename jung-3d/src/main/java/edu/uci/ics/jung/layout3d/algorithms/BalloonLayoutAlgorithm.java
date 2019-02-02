@@ -107,38 +107,8 @@ public class BalloonLayoutAlgorithm<N> implements Spherical, LayoutAlgorithm<N> 
   }
 
   protected void arrangeInSphere(Collection<N> nodes, Point center, double radius) {
+
+    Spherical.distribute(layoutModel, nodes, center, radius);
     sphereLocations.put(center, (int) radius);
-
-    int i = 0;
-    double offset = 2.0 / nodes.size();
-    int count = nodes.size();
-    double rnd = 1.0;
-    double increment = Math.PI * (3. - Math.sqrt(5.));
-    double centerX = center.x;
-    double centerY = center.y;
-    double centerZ = center.z;
-
-    for (N node : nodes) {
-
-      double y = ((i * offset) - 1) + (offset / 2);
-      double r = Math.sqrt(1 - Math.pow(y, 2));
-
-      double phi = ((i + rnd) % count) * increment;
-
-      double x = Math.cos(phi) * r;
-      double z = Math.sin(phi) * r;
-
-      x *= radius;
-      y *= radius;
-      z *= radius;
-      x += centerX;
-      y += centerY;
-      z += centerZ;
-      Point coord = Point.of(x, y, z);
-      layoutModel.set(node, coord);
-      log.debug("placed {} at {}", node, coord);
-      i++;
-      buildTree(node);
-    }
   }
 }

@@ -127,6 +127,16 @@ public class TreeDemo extends JPanel {
     tree.addEdge("A0", "A70", edgeId++);
     tree.addEdge("A0", "A80", edgeId++);
     tree.addEdge("A0", "A90", edgeId++);
+    tree.addEdge("A0", "A91", edgeId++);
+    tree.addEdge("A0", "A92", edgeId++);
+    tree.addEdge("A0", "A93", edgeId++);
+    tree.addEdge("A0", "A94", edgeId++);
+    tree.addEdge("A0", "A95", edgeId++);
+    tree.addEdge("A0", "A96", edgeId++);
+    tree.addEdge("A0", "A97", edgeId++);
+    tree.addEdge("A0", "A98", edgeId++);
+    tree.addEdge("A0", "A99", edgeId++);
+    tree.addEdge("A0", "A100", edgeId++);
 
     tree.addEdge("root", "B0", edgeId++);
     tree.addEdge("B0", "B1", edgeId++);
