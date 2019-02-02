@@ -25,10 +25,10 @@ import com.sun.j3d.utils.picking.behaviors.PickTranslateBehavior;
 import com.sun.j3d.utils.picking.behaviors.PickingCallback;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 import edu.uci.ics.jung.layout3d.algorithms.LayoutAlgorithm;
+import edu.uci.ics.jung.layout3d.event.LayoutChange;
 import edu.uci.ics.jung.layout3d.model.LayoutModel;
 import edu.uci.ics.jung.layout3d.model.LoadingCacheLayoutModel;
 import edu.uci.ics.jung.layout3d.model.Point;
-import edu.uci.ics.jung.layout3d.util.LayoutEventSupport;
 import edu.uci.ics.jung.layout3d.util.RandomLocationTransformer;
 import edu.uci.ics.jung.layout3d.util.Spherical;
 import edu.uci.ics.jung.visualization.picking.MultiPickedState;
@@ -68,7 +68,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** @author Tom Nelson */
-public class VisualizationViewer<N, E> extends JPanel {
+public class VisualizationViewer<N, E> extends JPanel implements LayoutChange.Listener, LayoutChange.Producer {
 
   private static final Logger log = LoggerFactory.getLogger(VisualizationViewer.class);
   BranchGroup objRoot;
@@ -90,6 +90,9 @@ public class VisualizationViewer<N, E> extends JPanel {
   }
 
   LayoutAlgorithm<N> layoutAlgorithm;
+
+  protected LayoutChange.Support changeSupport = LayoutChange.Support.create();
+
 
   /**
    * a listener used to cause pick events to result in repaints, even if they come from another view
@@ -154,29 +157,32 @@ public class VisualizationViewer<N, E> extends JPanel {
                 .withInitializer(
                     new RandomLocationTransformer<N>(600, 600, 600, System.currentTimeMillis()))
                 .build();
+    if (this.layoutModel instanceof LayoutChange.Support) {
+      ((LayoutChange.Support) layoutModel).addLayoutChangeListener(this);
+    }
 
     // moved everything when a node is moved in the model
-    if (layoutModel instanceof LayoutEventSupport) {
-      ((LayoutEventSupport) layoutModel)
-          .addLayoutChangeListener(
-              e -> {
-                for (N v : nodeMap.keySet()) {
-                  Point p = VisualizationViewer.this.layoutModel.apply(v);
-                  log.trace("location for {} will be {}", v, p);
-                  Vector3f pv = new Vector3f((float) p.x, (float) p.y, (float) p.z);
-                  Transform3D tx = new Transform3D();
-                  tx.setTranslation(pv);
-                  nodeMap.get(v).setTransform(tx);
-                }
-
-                for (EndpointPair<N> endpoints : layoutModel.getGraph().edges()) {
-                  N start = endpoints.nodeU();
-                  N end = endpoints.nodeV();
-                  EdgeGroup eg = edgeMap.get(endpoints);
-                  if (eg != null) eg.setEndpoints(layoutModel.apply(start), layoutModel.apply(end));
-                }
-              });
-    }
+//    if (layoutModel instanceof LayoutEventSupport) {
+//      ((LayoutEventSupport) layoutModel)
+//          .addLayoutChangeListener(
+//              e -> {
+//                for (N v : nodeMap.keySet()) {
+//                  Point p = VisualizationViewer.this.layoutModel.apply(v);
+//                  log.trace("location for {} will be {}", v, p);
+//                  Vector3f pv = new Vector3f((float) p.x, (float) p.y, (float) p.z);
+//                  Transform3D tx = new Transform3D();
+//                  tx.setTranslation(pv);
+//                  nodeMap.get(v).setTransform(tx);
+//                }
+//
+//                for (EndpointPair<N> endpoints : layoutModel.getGraph().edges()) {
+//                  N start = endpoints.nodeU();
+//                  N end = endpoints.nodeV();
+//                  EdgeGroup eg = edgeMap.get(endpoints);
+//                  if (eg != null) eg.setEndpoints(layoutModel.apply(start), layoutModel.apply(end));
+//                }
+//              });
+//    }
     return layoutModel;
   }
 
@@ -355,6 +361,9 @@ public class VisualizationViewer<N, E> extends JPanel {
 
     if (forceUpdate && this.layoutAlgorithm != null) {
       layoutModel.accept(this.layoutAlgorithm);
+      log.trace("will fire stateChanged");
+      changeSupport.fireLayoutChanged();
+      log.trace("fired stateChanged");
       //      changeSupport.fireStateChanged();
     }
     init(network.asGraph());
@@ -466,6 +475,14 @@ public class VisualizationViewer<N, E> extends JPanel {
     this.graphBranch = branch;
     objTrans.addChild(this.graphBranch);
 
+    if (layoutModel instanceof LayoutChange.Support) {
+      ((LayoutChange.Support)layoutModel).addLayoutChangeListener(new LayoutChange.Listener() {
+        @Override
+        public void layoutChanged() {
+          mapGraph(graph);
+        }
+      });
+    }
     if (layoutModel instanceof ChangeEventSupport) {
       ((ChangeEventSupport) layoutModel).addChangeListener(e -> mapGraph(graph));
     } else {
@@ -525,5 +542,15 @@ public class VisualizationViewer<N, E> extends JPanel {
   /** @return the renderContext */
   public RenderContext<N, EndpointPair<N>> getRenderContext() {
     return renderContext;
+  }
+
+  @Override
+  public LayoutChange.Support getLayoutChangeSupport() {
+    return this.changeSupport;
+  }
+
+  @Override
+  public void layoutChanged() {
+    getLayoutChangeSupport().fireLayoutChanged();
   }
 }

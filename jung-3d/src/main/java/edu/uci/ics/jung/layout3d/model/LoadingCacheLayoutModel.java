@@ -89,19 +89,20 @@ public class LoadingCacheLayoutModel<N> extends AbstractLayoutModel<N>
   }
 
   public void setInitializer(Function<N, Point> initializer) {
-    Function<N, Point> chain = initializer.andThen(p -> Point.of(p.x, p.y, p.z));
-    this.locations = CacheBuilder.newBuilder().build(CacheLoader.from(chain::apply));
+    this.locations = CacheBuilder.newBuilder().build(CacheLoader.from(initializer::apply));
+//    Function<N, Point> chain = initializer.andThen(p -> Point.of(p.x, p.y, p.z));
+//    this.locations = CacheBuilder.newBuilder().build(CacheLoader.from(chain::apply));
   }
 
-  public Map<N, Point> getLocations() {
-    return locations.asMap();
-  }
+//  public Map<N, Point> getLocations() {
+//    return locations.asMap();
+//  }
 
-  @Override
-  public void setGraph(Graph<N> graph) {
-    super.setGraph(graph);
-    changeSupport.fireChanged();
-  }
+//  @Override
+//  public void setGraph(Graph<N> graph) {
+//    super.setGraph(graph);
+//    changeSupport.fireChanged();
+//  }
 
   @Override
   public void set(N node, Point location) {

@@ -27,6 +27,7 @@ public class LayoutAlgorithmTransition<N, E> {
         AnimationLayoutAlgorithm.builder()
             .withVisualizationServer(visualizationServer)
             .withEndLayoutAlgorithm(endLayoutAlgorithm)
+                .shouldPrerelax(false)
             .build();
     visualizationServer.setLayoutAlgorithm(transitionLayoutAlgorithm);
   }

@@ -126,12 +126,12 @@ public class StandardSpringRepulsion<
   //        N,
   //        R extends StandardSpringRepulsion<N, R, B>,
   //        B extends StandardSpringRepulsion.Builder<N, R, B>>
-  //  extends edu.uci.ics.jung.layout.algorithms.repulsion.StandardSpringRepulsion<N, R, B>
+  //  extends edu.uci.ics.jung.layout3d.algorithms.repulsion.StandardSpringRepulsion<N, R, B>
   //    implements StandardRepulsion<N, R, B> {
   //
   //  public static class Builder<
   //          N, R extends StandardSpringRepulsion<N, R, B>, B extends Builder<N, R, B>>
-  //    extends edu.uci.ics.jung.layout.algorithms.repulsion.StandardSpringRepulsion.Builder<N,R,B>
+  //    extends edu.uci.ics.jung.layout3d.algorithms.repulsion.StandardSpringRepulsion.Builder<N,R,B>
   //      implements StandardRepulsion.Builder<N, R, B> {
   //
   ////    protected LoadingCache<N, SpringNodeData> springNodeData;
