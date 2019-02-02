@@ -141,6 +141,6 @@ public interface LayoutNodePositionChange {
   interface Listener<N> {
     void layoutNodePositionChanged(Event<N> evt);
 
-    void layoutNodePositionChanged(NetworkEvent<N> evt);
+//    void layoutNodePositionChanged(NetworkEvent<N> evt);
   }
 }

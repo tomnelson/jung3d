@@ -26,6 +26,7 @@ import com.sun.j3d.utils.picking.behaviors.PickingCallback;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 import edu.uci.ics.jung.layout3d.algorithms.LayoutAlgorithm;
 import edu.uci.ics.jung.layout3d.event.LayoutChange;
+import edu.uci.ics.jung.layout3d.event.LayoutNodePositionChange;
 import edu.uci.ics.jung.layout3d.model.LayoutModel;
 import edu.uci.ics.jung.layout3d.model.LoadingCacheLayoutModel;
 import edu.uci.ics.jung.layout3d.model.Point;
@@ -161,28 +162,31 @@ public class VisualizationViewer<N, E> extends JPanel implements LayoutChange.Li
       ((LayoutChange.Support) layoutModel).addLayoutChangeListener(this);
     }
 
+    if (this.layoutModel instanceof LayoutNodePositionChange.Producer) {
+      ((LayoutNodePositionChange.Producer)layoutModel)
+              .getLayoutNodePositionSupport()
+              .addLayoutNodePositionChangeListener(
+                            e -> {
+                for (N v : nodeMap.keySet()) {
+                  Point p = VisualizationViewer.this.layoutModel.apply(v);
+                  log.trace("location for {} will be {}", v, p);
+                  Vector3f pv = new Vector3f((float) p.x, (float) p.y, (float) p.z);
+                  Transform3D tx = new Transform3D();
+                  tx.setTranslation(pv);
+                  nodeMap.get(v).setTransform(tx);
+                }
+
+                for (EndpointPair<N> endpoints : layoutModel.getGraph().edges()) {
+                  N start = endpoints.nodeU();
+                  N end = endpoints.nodeV();
+                  EdgeGroup eg = edgeMap.get(endpoints);
+                  if (eg != null) eg.setEndpoints(layoutModel.apply(start), layoutModel.apply(end));
+                }
+              });
+
+    }
     // moved everything when a node is moved in the model
-//    if (layoutModel instanceof LayoutEventSupport) {
-//      ((LayoutEventSupport) layoutModel)
-//          .addLayoutChangeListener(
-//              e -> {
-//                for (N v : nodeMap.keySet()) {
-//                  Point p = VisualizationViewer.this.layoutModel.apply(v);
-//                  log.trace("location for {} will be {}", v, p);
-//                  Vector3f pv = new Vector3f((float) p.x, (float) p.y, (float) p.z);
-//                  Transform3D tx = new Transform3D();
-//                  tx.setTranslation(pv);
-//                  nodeMap.get(v).setTransform(tx);
-//                }
-//
-//                for (EndpointPair<N> endpoints : layoutModel.getGraph().edges()) {
-//                  N start = endpoints.nodeU();
-//                  N end = endpoints.nodeV();
-//                  EdgeGroup eg = edgeMap.get(endpoints);
-//                  if (eg != null) eg.setEndpoints(layoutModel.apply(start), layoutModel.apply(end));
-//                }
-//              });
-//    }
+
     return layoutModel;
   }
 
