@@ -39,11 +39,11 @@ public interface LayoutNodePositionChange {
 
     void setFireEvents(boolean fireEvents);
 
-    void addLayoutNodePositionChangeListener(edu.uci.ics.jung.layout3d.event.LayoutNodePositionChange.Listener<N> l);
+    void addLayoutNodePositionChangeListener(LayoutNodePositionChange.Listener<N> l);
 
-    void removeLayoutNodePositionChangeListener(edu.uci.ics.jung.layout3d.event.LayoutNodePositionChange.Listener<N> l);
+    void removeLayoutNodePositionChangeListener(LayoutNodePositionChange.Listener<N> l);
 
-    List<edu.uci.ics.jung.layout3d.event.LayoutNodePositionChange.Listener<N>> getLayoutNodePositionChangeListeners();
+    List<LayoutNodePositionChange.Listener<N>> getLayoutNodePositionChangeListeners();
 
     void fireLayoutNodePositionChanged(N node, Point location);
   }
@@ -75,17 +75,17 @@ public interface LayoutNodePositionChange {
     }
 
     @Override
-    public void addLayoutNodePositionChangeListener(edu.uci.ics.jung.layout3d.event.LayoutNodePositionChange.Listener l) {
+    public void addLayoutNodePositionChangeListener(LayoutNodePositionChange.Listener l) {
       changeListeners.add(l);
     }
 
     @Override
-    public void removeLayoutNodePositionChangeListener(edu.uci.ics.jung.layout3d.event.LayoutNodePositionChange.Listener l) {
+    public void removeLayoutNodePositionChangeListener(LayoutNodePositionChange.Listener l) {
       changeListeners.remove(l);
     }
 
     @Override
-    public List<edu.uci.ics.jung.layout3d.event.LayoutNodePositionChange.Listener<N>> getLayoutNodePositionChangeListeners() {
+    public List<LayoutNodePositionChange.Listener<N>> getLayoutNodePositionChangeListeners() {
       return changeListeners;
     }
 

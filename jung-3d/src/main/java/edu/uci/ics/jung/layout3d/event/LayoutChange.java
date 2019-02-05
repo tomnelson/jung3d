@@ -16,7 +16,7 @@ public interface LayoutChange {
 
   /** indicates support for this type of event dispatch */
   interface Producer {
-    edu.uci.ics.jung.layout3d.event.LayoutChange.Support getLayoutChangeSupport();
+    LayoutChange.Support getLayoutChangeSupport();
   }
 
   /** method signatures to add/remove listeners and fire events */
@@ -30,9 +30,9 @@ public interface LayoutChange {
 
     void setFireEvents(boolean fireEvents);
 
-    void addLayoutChangeListener(edu.uci.ics.jung.layout3d.event.LayoutChange.Listener l);
+    void addLayoutChangeListener(LayoutChange.Listener l);
 
-    void removeLayoutChangeListener(edu.uci.ics.jung.layout3d.event.LayoutChange.Listener l);
+    void removeLayoutChangeListener(LayoutChange.Listener l);
 
     List<Listener> getLayoutChangeListeners();
 
@@ -65,17 +65,17 @@ public interface LayoutChange {
     }
 
     @Override
-    public void addLayoutChangeListener(edu.uci.ics.jung.layout3d.event.LayoutChange.Listener l) {
+    public void addLayoutChangeListener(LayoutChange.Listener l) {
       changeListeners.add(l);
     }
 
     @Override
-    public void removeLayoutChangeListener(edu.uci.ics.jung.layout3d.event.LayoutChange.Listener l) {
+    public void removeLayoutChangeListener(LayoutChange.Listener l) {
       changeListeners.remove(l);
     }
 
     @Override
-    public List<edu.uci.ics.jung.layout3d.event.LayoutChange.Listener> getLayoutChangeListeners() {
+    public List<LayoutChange.Listener> getLayoutChangeListeners() {
       return changeListeners;
     }
 

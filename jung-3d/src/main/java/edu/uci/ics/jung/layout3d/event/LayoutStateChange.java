@@ -34,11 +34,11 @@ public interface LayoutStateChange {
 
     void setFireEvents(boolean fireEvents);
 
-    void addLayoutStateChangeListener(edu.uci.ics.jung.layout3d.event.LayoutStateChange.Listener listener);
+    void addLayoutStateChangeListener(LayoutStateChange.Listener listener);
 
-    void removeLayoutStateChangeListener(edu.uci.ics.jung.layout3d.event.LayoutStateChange.Listener listener);
+    void removeLayoutStateChangeListener(LayoutStateChange.Listener listener);
 
-    List<edu.uci.ics.jung.layout3d.event.LayoutStateChange.Listener> getLayoutStateChangeListeners();
+    List<LayoutStateChange.Listener> getLayoutStateChangeListeners();
 
     void fireLayoutStateChanged(LayoutModel layoutModel, boolean state);
   }
@@ -46,7 +46,7 @@ public interface LayoutStateChange {
   /** implementations for a producer of this event model */
   class SupportImpl implements Support {
 
-    private static final Logger log = LoggerFactory.getLogger(edu.uci.ics.jung.layout3d.event.LayoutStateChange.SupportImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(LayoutStateChange.SupportImpl.class);
 
     private SupportImpl() {}
 
@@ -54,7 +54,7 @@ public interface LayoutStateChange {
     protected boolean fireEvents = true;
 
     /** listeners for these changes */
-    protected List<edu.uci.ics.jung.layout3d.event.LayoutStateChange.Listener> changeListeners =
+    protected List<LayoutStateChange.Listener> changeListeners =
         Collections.synchronizedList(Lists.newArrayList());
 
     @Override
@@ -68,17 +68,17 @@ public interface LayoutStateChange {
     }
 
     @Override
-    public void addLayoutStateChangeListener(edu.uci.ics.jung.layout3d.event.LayoutStateChange.Listener l) {
+    public void addLayoutStateChangeListener(LayoutStateChange.Listener l) {
       changeListeners.add(l);
     }
 
     @Override
-    public void removeLayoutStateChangeListener(edu.uci.ics.jung.layout3d.event.LayoutStateChange.Listener l) {
+    public void removeLayoutStateChangeListener(LayoutStateChange.Listener l) {
       changeListeners.remove(l);
     }
 
     @Override
-    public List<edu.uci.ics.jung.layout3d.event.LayoutStateChange.Listener> getLayoutStateChangeListeners() {
+    public List<LayoutStateChange.Listener> getLayoutStateChangeListeners() {
       return changeListeners;
     }
 
@@ -86,7 +86,7 @@ public interface LayoutStateChange {
     public void fireLayoutStateChanged(LayoutModel layoutModel, boolean state) {
       if (fireEvents && changeListeners.size() > 0) {
         // make an event and fire it
-        edu.uci.ics.jung.layout3d.event.LayoutStateChange.Event evt = new edu.uci.ics.jung.layout3d.event.LayoutStateChange.Event(layoutModel, state);
+        LayoutStateChange.Event evt = new LayoutStateChange.Event(layoutModel, state);
         for (int i = changeListeners.size() - 1; i >= 0; i--) {
           changeListeners.get(i).layoutStateChanged(evt);
         }
