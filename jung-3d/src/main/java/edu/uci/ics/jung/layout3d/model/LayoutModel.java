@@ -15,7 +15,6 @@ import edu.uci.ics.jung.layout3d.algorithms.LayoutAlgorithm;
 import edu.uci.ics.jung.layout3d.event.LayoutChange;
 import edu.uci.ics.jung.layout3d.event.LayoutNodePositionChange;
 import edu.uci.ics.jung.layout3d.event.LayoutStateChange;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Function;
@@ -25,10 +24,11 @@ import java.util.function.Function;
  *
  * @author Tom Nelson
  */
-public interface LayoutModel<N> extends Function<N, Point>,
+public interface LayoutModel<N>
+    extends Function<N, Point>,
         LayoutChange.Producer,
         LayoutNodePositionChange.Producer<N>,
-        LayoutStateChange.Producer  {
+        LayoutStateChange.Producer {
 
   int getWidth();
 
@@ -100,16 +100,16 @@ public interface LayoutModel<N> extends Function<N, Point>,
    *
    * @return
    */
-//  LayoutStateChangeSupport getLayoutStateChangeSupport();
+  //  LayoutStateChangeSupport getLayoutStateChangeSupport();
 
   interface LayoutStateChangeSupport {
     boolean isFireEvents();
 
-//    void setFireEvents(boolean fireEvents);
-//
-//    void addLayoutStateChangeListener(LayoutStateChangeListener l);
-//
-//    void removeLayoutStateChangeListener(LayoutStateChangeListener l);
+    //    void setFireEvents(boolean fireEvents);
+    //
+    //    void addLayoutStateChangeListener(LayoutStateChangeListener l);
+    //
+    //    void removeLayoutStateChangeListener(LayoutStateChangeListener l);
 
     void fireLayoutStateChanged(LayoutModel source, boolean state);
   }
@@ -130,22 +130,22 @@ public interface LayoutModel<N> extends Function<N, Point>,
     void fireChanged();
   }
 
-//  class LayoutStateChangeEvent {
-//    public final LayoutModel layoutModel;
-//    public final boolean active;
-//
-//    public LayoutStateChangeEvent(LayoutModel layoutModel, boolean active) {
-//      this.layoutModel = layoutModel;
-//      this.active = active;
-//    }
-//
-//    @Override
-//    public String toString() {
-//      return "LayoutStateChangeEvent{" + "layoutModel=" + layoutModel + ", active=" + active + '}';
-//    }
-//  }
-//
-//  interface LayoutStateChangeListener {
-//    void layoutStateChanged(LayoutStateChangeEvent evt);
-//  }
+  //  class LayoutStateChangeEvent {
+  //    public final LayoutModel layoutModel;
+  //    public final boolean active;
+  //
+  //    public LayoutStateChangeEvent(LayoutModel layoutModel, boolean active) {
+  //      this.layoutModel = layoutModel;
+  //      this.active = active;
+  //    }
+  //
+  //    @Override
+  //    public String toString() {
+  //      return "LayoutStateChangeEvent{" + "layoutModel=" + layoutModel + ", active=" + active + '}';
+  //    }
+  //  }
+  //
+  //  interface LayoutStateChangeListener {
+  //    void layoutStateChanged(LayoutStateChangeEvent evt);
+  //  }
 }

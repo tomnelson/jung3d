@@ -3,7 +3,6 @@ package edu.uci.ics.jung.layout3d.event;
 import com.google.common.collect.Lists;
 import com.google.common.graph.Network;
 import edu.uci.ics.jung.layout3d.model.Point;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -141,6 +140,6 @@ public interface LayoutNodePositionChange {
   interface Listener<N> {
     void layoutNodePositionChanged(Event<N> evt);
 
-//    void layoutNodePositionChanged(NetworkEvent<N> evt);
+    //    void layoutNodePositionChanged(NetworkEvent<N> evt);
   }
 }

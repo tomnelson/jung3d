@@ -2,11 +2,10 @@ package edu.uci.ics.jung.layout3d.event;
 
 import com.google.common.collect.Lists;
 import edu.uci.ics.jung.layout3d.model.LayoutModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Collections;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An event model to convey that the LayoutModel is either active (busy) or not. Consumers of this

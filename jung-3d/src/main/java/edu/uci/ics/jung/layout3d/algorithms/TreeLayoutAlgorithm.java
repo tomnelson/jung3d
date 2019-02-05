@@ -15,14 +15,13 @@ import com.google.common.collect.Sets;
 import edu.uci.ics.jung.graph.util.TreeUtils;
 import edu.uci.ics.jung.layout3d.model.LayoutModel;
 import edu.uci.ics.jung.layout3d.model.Point;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Karlheinz Toni
@@ -30,7 +29,8 @@ import java.util.Set;
  */
 public class TreeLayoutAlgorithm<N> implements LayoutAlgorithm<N> {
 
-  private static final Logger log = LoggerFactory.getLogger(edu.uci.ics.jung.layout.algorithms.TreeLayoutAlgorithm.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(edu.uci.ics.jung.layout.algorithms.TreeLayoutAlgorithm.class);
 
   public static class Builder<N> {
     private int horizontalNodeSpacing = DEFAULT_HORIZONTAL_NODE_SPACING;
@@ -113,7 +113,7 @@ public class TreeLayoutAlgorithm<N> implements LayoutAlgorithm<N> {
     layoutModel.setSize(
         Math.max(layoutModel.getWidth(), overallWidth),
         Math.max(layoutModel.getHeight(), overallHeight),
-            Math.max(layoutModel.getDepth(), overallDepth));
+        Math.max(layoutModel.getDepth(), overallDepth));
     for (N node : roots) {
       calculateWidth(layoutModel, node);
       currentX += (this.basePositions.get(node) / 2 + this.horizontalNodeSpacing);
@@ -190,6 +190,7 @@ public class TreeLayoutAlgorithm<N> implements LayoutAlgorithm<N> {
 
   /** @return the center of this layout's area. */
   public Point getCenter(LayoutModel<N> layoutModel) {
-    return Point.of(layoutModel.getWidth() / 2, layoutModel.getHeight() / 2, layoutModel.getDepth() / 2);
+    return Point.of(
+        layoutModel.getWidth() / 2, layoutModel.getHeight() / 2, layoutModel.getDepth() / 2);
   }
 }

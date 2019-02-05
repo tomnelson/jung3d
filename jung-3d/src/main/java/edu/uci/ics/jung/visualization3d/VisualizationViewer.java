@@ -69,7 +69,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** @author Tom Nelson */
-public class VisualizationViewer<N, E> extends JPanel implements LayoutChange.Listener, LayoutChange.Producer {
+public class VisualizationViewer<N, E> extends JPanel
+    implements LayoutChange.Listener, LayoutChange.Producer {
 
   private static final Logger log = LoggerFactory.getLogger(VisualizationViewer.class);
   BranchGroup objRoot;
@@ -93,7 +94,6 @@ public class VisualizationViewer<N, E> extends JPanel implements LayoutChange.Li
   LayoutAlgorithm<N> layoutAlgorithm;
 
   protected LayoutChange.Support changeSupport = LayoutChange.Support.create();
-
 
   /**
    * a listener used to cause pick events to result in repaints, even if they come from another view
@@ -163,10 +163,10 @@ public class VisualizationViewer<N, E> extends JPanel implements LayoutChange.Li
     }
 
     if (this.layoutModel instanceof LayoutNodePositionChange.Producer) {
-      ((LayoutNodePositionChange.Producer)layoutModel)
-              .getLayoutNodePositionSupport()
-              .addLayoutNodePositionChangeListener(
-                            e -> {
+      ((LayoutNodePositionChange.Producer) layoutModel)
+          .getLayoutNodePositionSupport()
+          .addLayoutNodePositionChangeListener(
+              e -> {
                 for (N v : nodeMap.keySet()) {
                   Point p = VisualizationViewer.this.layoutModel.apply(v);
                   log.trace("location for {} will be {}", v, p);
@@ -183,7 +183,6 @@ public class VisualizationViewer<N, E> extends JPanel implements LayoutChange.Li
                   if (eg != null) eg.setEndpoints(layoutModel.apply(start), layoutModel.apply(end));
                 }
               });
-
     }
     // moved everything when a node is moved in the model
 
@@ -480,12 +479,14 @@ public class VisualizationViewer<N, E> extends JPanel implements LayoutChange.Li
     objTrans.addChild(this.graphBranch);
 
     if (layoutModel instanceof LayoutChange.Support) {
-      ((LayoutChange.Support)layoutModel).addLayoutChangeListener(new LayoutChange.Listener() {
-        @Override
-        public void layoutChanged() {
-          mapGraph(graph);
-        }
-      });
+      ((LayoutChange.Support) layoutModel)
+          .addLayoutChangeListener(
+              new LayoutChange.Listener() {
+                @Override
+                public void layoutChanged() {
+                  mapGraph(graph);
+                }
+              });
     }
     if (layoutModel instanceof ChangeEventSupport) {
       ((ChangeEventSupport) layoutModel).addChangeListener(e -> mapGraph(graph));

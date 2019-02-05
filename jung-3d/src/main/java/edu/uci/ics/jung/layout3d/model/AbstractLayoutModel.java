@@ -2,18 +2,17 @@ package edu.uci.ics.jung.layout3d.model;
 
 import com.google.common.collect.Sets;
 import com.google.common.graph.Graph;
-import edu.uci.ics.jung.layout3d.event.LayoutNodePositionChange;
 import edu.uci.ics.jung.layout.util.VisRunnable;
 import edu.uci.ics.jung.layout3d.algorithms.IterativeLayoutAlgorithm;
 import edu.uci.ics.jung.layout3d.algorithms.LayoutAlgorithm;
 import edu.uci.ics.jung.layout3d.event.LayoutChange;
+import edu.uci.ics.jung.layout3d.event.LayoutNodePositionChange;
 import edu.uci.ics.jung.layout3d.event.LayoutStateChange;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ConcurrentModificationException;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * superclass for 3D LayoutModels. Holds the required attributes for placing graph nodes in a
@@ -72,10 +71,10 @@ public abstract class AbstractLayoutModel<N> implements LayoutModel<N> {
   protected boolean relaxing;
 
   protected CompletableFuture theFuture;
-    protected LayoutNodePositionChange.Support layoutNodePositionSupport =
-            LayoutNodePositionChange.Support.create();
-    protected LayoutStateChange.Support layoutStateChangeSupport = LayoutStateChange.Support.create();
-    protected LayoutChange.Support layoutChangeSupport = LayoutChange.Support.create();
+  protected LayoutNodePositionChange.Support layoutNodePositionSupport =
+      LayoutNodePositionChange.Support.create();
+  protected LayoutStateChange.Support layoutStateChangeSupport = LayoutStateChange.Support.create();
+  protected LayoutChange.Support layoutChangeSupport = LayoutChange.Support.create();
 
   protected AbstractLayoutModel(Builder builder) {
     this.graph = builder.graph;
@@ -144,18 +143,17 @@ public abstract class AbstractLayoutModel<N> implements LayoutModel<N> {
     }
   }
 
-    @Override
-    public LayoutStateChange.Support getLayoutStateChangeSupport() {
-        return layoutStateChangeSupport;
-    }
+  @Override
+  public LayoutStateChange.Support getLayoutStateChangeSupport() {
+    return layoutStateChangeSupport;
+  }
 
-    @Override
-    public LayoutChange.Support getLayoutChangeSupport() {
-        return this.layoutChangeSupport;
-    }
+  @Override
+  public LayoutChange.Support getLayoutChangeSupport() {
+    return this.layoutChangeSupport;
+  }
 
-
-    /**
+  /**
    * create and start a new VisRunner for the passed IterativeContext
    *
    * @param iterativeContext
@@ -172,11 +170,11 @@ public abstract class AbstractLayoutModel<N> implements LayoutModel<N> {
     // layout becomes active
     layoutStateChangeSupport.fireLayoutStateChanged(this, true);
     // prerelax phase
-      layoutNodePositionSupport.setFireEvents(false);
-      layoutChangeSupport.setFireEvents(false);
-      iterativeContext.preRelax();
-      layoutChangeSupport.setFireEvents(true);
-      layoutNodePositionSupport.setFireEvents(true);
+    layoutNodePositionSupport.setFireEvents(false);
+    layoutChangeSupport.setFireEvents(false);
+    iterativeContext.preRelax();
+    layoutChangeSupport.setFireEvents(true);
+    layoutNodePositionSupport.setFireEvents(true);
     log.trace("prerelax is done");
 
     visRunnable = new VisRunnable(iterativeContext);
@@ -186,9 +184,9 @@ public abstract class AbstractLayoutModel<N> implements LayoutModel<N> {
                 () -> {
                   log.info("We're done");
                   setRelaxing(false);
-                    this.layoutChangeSupport.fireLayoutChanged();
-                    // fire an event to say that the layout relax is done
-                    this.layoutStateChangeSupport.fireLayoutStateChanged(this, false);
+                  this.layoutChangeSupport.fireLayoutChanged();
+                  // fire an event to say that the layout relax is done
+                  this.layoutStateChangeSupport.fireLayoutStateChanged(this, false);
                 });
   }
 
@@ -200,7 +198,7 @@ public abstract class AbstractLayoutModel<N> implements LayoutModel<N> {
 
   public void setGraph(Graph<N> graph) {
     this.graph = graph;
-      this.layoutChangeSupport.fireLayoutChanged();
+    this.layoutChangeSupport.fireLayoutChanged();
     if (log.isTraceEnabled()) {
       log.trace("withGraph to n:{} e:{}", graph.nodes(), graph.edges());
     }
@@ -327,8 +325,8 @@ public abstract class AbstractLayoutModel<N> implements LayoutModel<N> {
 
   @Override
   public void set(N node, Point location) {
-      layoutNodePositionSupport.fireLayoutNodePositionChanged(node, location);
-      layoutChangeSupport.fireLayoutChanged();
+    layoutNodePositionSupport.fireLayoutNodePositionChanged(node, location);
+    layoutChangeSupport.fireLayoutChanged();
   }
 
   /**
@@ -343,51 +341,50 @@ public abstract class AbstractLayoutModel<N> implements LayoutModel<N> {
     }
   }
 
-    @Override
-    public LayoutNodePositionChange.Support<N> getLayoutNodePositionSupport() {
-        return this.layoutNodePositionSupport;
-    }
+  @Override
+  public LayoutNodePositionChange.Support<N> getLayoutNodePositionSupport() {
+    return this.layoutNodePositionSupport;
+  }
 
-
-//  @Override
-//  public boolean isFireEvents() {
-//    return changeSupport.isFireEvents();
-//  }
-//
-//  @Override
-//  public void setFireEvents(boolean fireEvents) {
-//    changeSupport.setFireEvents(fireEvents);
-//  }
-//
-//  @Override
-//  public void addChangeListener(ChangeListener l) {
-//    changeSupport.addChangeListener(l);
-//  }
-//
-//  @Override
-//  public void addLayoutChangeListener(LayoutChangeListener<N> listener) {
-//    layoutChangeListeners.add(listener);
-//  }
-//
-//  @Override
-//  public void removeLayoutChangeListener(LayoutChangeListener<N> listener) {
-//    layoutChangeListeners.remove(listener);
-//  }
-//
-//  protected void fireLayoutChanged(N node, Point location) {
-//    if (layoutChangeListeners.size() > 0) {
-//      LayoutEvent<N> layoutEvent = new LayoutEvent(node, location);
-//      for (LayoutChangeListener<N> layoutChangeListener : layoutChangeListeners) {
-//        layoutChangeListener.layoutChanged(layoutEvent);
-//      }
-//    }
-//  }
-//
-//  @Override
-//  public void removeChangeListener(ChangeListener l) {
-//    changeSupport.removeChangeListener(l);
-//  }
-//
+  //  @Override
+  //  public boolean isFireEvents() {
+  //    return changeSupport.isFireEvents();
+  //  }
+  //
+  //  @Override
+  //  public void setFireEvents(boolean fireEvents) {
+  //    changeSupport.setFireEvents(fireEvents);
+  //  }
+  //
+  //  @Override
+  //  public void addChangeListener(ChangeListener l) {
+  //    changeSupport.addChangeListener(l);
+  //  }
+  //
+  //  @Override
+  //  public void addLayoutChangeListener(LayoutChangeListener<N> listener) {
+  //    layoutChangeListeners.add(listener);
+  //  }
+  //
+  //  @Override
+  //  public void removeLayoutChangeListener(LayoutChangeListener<N> listener) {
+  //    layoutChangeListeners.remove(listener);
+  //  }
+  //
+  //  protected void fireLayoutChanged(N node, Point location) {
+  //    if (layoutChangeListeners.size() > 0) {
+  //      LayoutEvent<N> layoutEvent = new LayoutEvent(node, location);
+  //      for (LayoutChangeListener<N> layoutChangeListener : layoutChangeListeners) {
+  //        layoutChangeListener.layoutChanged(layoutEvent);
+  //      }
+  //    }
+  //  }
+  //
+  //  @Override
+  //  public void removeChangeListener(ChangeListener l) {
+  //    changeSupport.removeChangeListener(l);
+  //  }
+  //
   public boolean isRelaxing() {
     return relaxing;
   }
@@ -397,11 +394,11 @@ public abstract class AbstractLayoutModel<N> implements LayoutModel<N> {
     this.relaxing = relaxing;
   }
 
-//  @Override
-//  public void fireChanged() {
-//    log.trace("fireChanged");
-//    changeSupport.fireChanged();
-//  }
+  //  @Override
+  //  public void fireChanged() {
+  //    log.trace("fireChanged");
+  //    changeSupport.fireChanged();
+  //  }
 
   @Override
   public String toString() {

@@ -24,7 +24,7 @@ public class AnimationLayoutAlgorithm<N> extends AbstractIterativeLayoutAlgorith
   LayoutModel<N> layoutModel;
 
   public static class Builder<N, T extends AnimationLayoutAlgorithm<N>, B extends Builder<N, T, B>>
-          extends AbstractIterativeLayoutAlgorithm.Builder<N, T, B> {
+      extends AbstractIterativeLayoutAlgorithm.Builder<N, T, B> {
 
     private VisualizationViewer<N, ?> visualizationServer;
     private LayoutAlgorithm<N> endLayoutAlgorithm;

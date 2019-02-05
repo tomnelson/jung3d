@@ -32,7 +32,7 @@ public class TreeDemo extends JPanel {
     super(new BorderLayout());
 
     this.tree = this.createTree();
-//        growTree();
+    //        growTree();
 
     JPanel vvHolder = new JPanel();
     vvHolder.setLayout(new GridLayout(1, 1));
@@ -69,7 +69,9 @@ public class TreeDemo extends JPanel {
 
   private MutableCTreeNetwork<Object, Object> growTree() {
     int count = 0;
-    String[] nodes = {"a", "b", "c", "d", "e", "f", "g","h","i","j","k","l","m","n","o","p","q","r","s"};
+    String[] nodes = {
+      "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s"
+    };
     MutableCTreeNetwork<Object, Object> tree =
         TreeNetworkBuilder.builder().expectedNodeCount(50).build();
 
