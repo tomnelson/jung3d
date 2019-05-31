@@ -2,12 +2,12 @@ package edu.uci.ics.jung.layout3d.model;
 
 import com.google.common.collect.Sets;
 import com.google.common.graph.Graph;
-import edu.uci.ics.jung.layout.util.VisRunnable;
 import edu.uci.ics.jung.layout3d.algorithms.IterativeLayoutAlgorithm;
 import edu.uci.ics.jung.layout3d.algorithms.LayoutAlgorithm;
 import edu.uci.ics.jung.layout3d.event.LayoutChange;
 import edu.uci.ics.jung.layout3d.event.LayoutNodePositionChange;
 import edu.uci.ics.jung.layout3d.event.LayoutStateChange;
+import edu.uci.ics.jung.visualization.layout.util.VisRunnable;
 import java.util.ConcurrentModificationException;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;

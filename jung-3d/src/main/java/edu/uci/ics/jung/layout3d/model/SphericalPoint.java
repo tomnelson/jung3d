@@ -1,6 +1,5 @@
 package edu.uci.ics.jung.layout3d.model;
 
-
 import java.util.Objects;
 
 /** @author Tom Nelson */

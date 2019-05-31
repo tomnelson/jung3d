@@ -1,6 +1,6 @@
 package edu.uci.ics.jung.layout3d.algorithms;
 
-import edu.uci.ics.jung.algorithms.util.IterativeContext;
+import edu.uci.ics.jung.visualization.layout.algorithms.util.IterativeContext;
 
 public interface IterativeLayoutAlgorithm<N> extends LayoutAlgorithm<N>, IterativeContext {
   boolean preRelax(); // may be a no-op depending on how the algorithm instance is created

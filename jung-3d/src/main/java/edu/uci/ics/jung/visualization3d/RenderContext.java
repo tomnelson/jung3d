@@ -8,7 +8,7 @@
 package edu.uci.ics.jung.visualization3d;
 
 import com.google.common.graph.Graph;
-import edu.uci.ics.jung.visualization.picking.PickedState;
+import edu.uci.ics.jung.visualization.selection.MutableSelectedState;
 import edu.uci.ics.jung.visualization.util.Context;
 import java.util.function.Function;
 import javax.media.j3d.Appearance;
@@ -24,13 +24,13 @@ public interface RenderContext<N, E> {
 
   void setEdgeShapeTransformer(Function<Context<Graph<N>, E>, Node> edgeShapeTransformer);
 
-  PickedState<E> getPickedEdgeState();
+  MutableSelectedState<E> getPickedEdgeState();
 
-  void setPickedEdgeState(PickedState<E> pickedEdgeState);
+  void setPickedEdgeState(MutableSelectedState<E> pickedEdgeState);
 
-  PickedState<N> getPickedVertexState();
+  MutableSelectedState<N> getPickedVertexState();
 
-  void setPickedVertexState(PickedState<N> pickedVertexState);
+  void setPickedVertexState(MutableSelectedState<N> pickedVertexState);
 
   Function<N, Appearance> getVertexAppearanceTransformer();
 

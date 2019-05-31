@@ -11,7 +11,7 @@
  */
 package edu.uci.ics.jung.visualization3d.decorators;
 
-import edu.uci.ics.jung.visualization.picking.PickedInfo;
+import edu.uci.ics.jung.visualization.selection.SelectedState;
 import java.awt.Paint;
 import java.util.function.Function;
 
@@ -24,7 +24,7 @@ public class PickableVertexPaintTransformer<V> implements Function<V, Paint> {
   //    protected Paint draw_paint;
   protected Paint fill_paint;
   protected Paint picked_paint;
-  protected PickedInfo<V> pi;
+  protected SelectedState<V> pi;
 
   /**
    * @param pi specifies which vertices report as "picked"
@@ -32,7 +32,7 @@ public class PickableVertexPaintTransformer<V> implements Function<V, Paint> {
    * @param picked_paint <code>Paint</code> used to fill picked vertex shapes
    */
   public PickableVertexPaintTransformer(
-      PickedInfo<V> pi,
+      SelectedState<V> pi,
       //    		Paint draw_paint,
       Paint fill_paint,
       Paint picked_paint) {
@@ -49,7 +49,7 @@ public class PickableVertexPaintTransformer<V> implements Function<V, Paint> {
   //    }
 
   public Paint apply(V v) {
-    if (pi.isPicked(v)) return picked_paint;
+    if (pi.isSelected(v)) return picked_paint;
     else return fill_paint;
   }
 }

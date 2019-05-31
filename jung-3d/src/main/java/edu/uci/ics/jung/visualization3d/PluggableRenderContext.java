@@ -11,7 +11,7 @@ import com.google.common.graph.Graph;
 import com.sun.j3d.utils.geometry.Box;
 import com.sun.j3d.utils.geometry.Cylinder;
 import com.sun.j3d.utils.geometry.Sphere;
-import edu.uci.ics.jung.visualization.picking.PickedState;
+import edu.uci.ics.jung.visualization.selection.MutableSelectedState;
 import edu.uci.ics.jung.visualization.util.Context;
 import java.util.function.Function;
 import javax.media.j3d.Appearance;
@@ -28,8 +28,8 @@ public class PluggableRenderContext<N, E> implements RenderContext<N, E> {
 
   protected Function<E, Appearance> edgeAppearanceTransformer;
   protected Function<Context<Graph<N>, E>, Node> edgeShapeTransformer;
-  protected PickedState<E> pickedEdgeState;
-  protected PickedState<N> pickedVertexState;
+  protected MutableSelectedState<E> pickedEdgeState;
+  protected MutableSelectedState<N> pickedVertexState;
   protected Function<N, Appearance> vertexAppearanceTransformer;
   protected Function<Object, String> vertexStringer = n -> null;
   protected Function<N, Node> vertexShapeTransformer;
@@ -124,11 +124,11 @@ public class PluggableRenderContext<N, E> implements RenderContext<N, E> {
     return edgeShapeTransformer;
   }
 
-  public PickedState<E> getPickedEdgeState() {
+  public MutableSelectedState<E> getPickedEdgeState() {
     return pickedEdgeState;
   }
 
-  public PickedState<N> getPickedVertexState() {
+  public MutableSelectedState<N> getPickedVertexState() {
     return pickedVertexState;
   }
 
@@ -152,11 +152,11 @@ public class PluggableRenderContext<N, E> implements RenderContext<N, E> {
     this.edgeShapeTransformer = edgeShapeTransformer;
   }
 
-  public void setPickedEdgeState(PickedState<E> pickedEdgeState) {
+  public void setPickedEdgeState(MutableSelectedState<E> pickedEdgeState) {
     this.pickedEdgeState = pickedEdgeState;
   }
 
-  public void setPickedVertexState(PickedState<N> pickedVertexState) {
+  public void setPickedVertexState(MutableSelectedState<N> pickedVertexState) {
     this.pickedVertexState = pickedVertexState;
   }
 

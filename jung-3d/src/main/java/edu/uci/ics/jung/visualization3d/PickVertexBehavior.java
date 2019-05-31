@@ -11,7 +11,7 @@ package edu.uci.ics.jung.visualization3d;
 import com.sun.j3d.utils.picking.PickResult;
 import com.sun.j3d.utils.picking.PickTool;
 import com.sun.j3d.utils.picking.behaviors.PickTranslateBehavior;
-import edu.uci.ics.jung.visualization.picking.PickedState;
+import edu.uci.ics.jung.visualization.selection.MutableSelectedState;
 import edu.uci.ics.jung.visualization.util.ChangeEventSupport;
 import edu.uci.ics.jung.visualization.util.DefaultChangeEventSupport;
 import java.awt.event.MouseEvent;
@@ -27,10 +27,10 @@ public class PickVertexBehavior<V, E> extends PickTranslateBehavior implements C
   Bounds bounds;
   BranchGroup root;
   ChangeEventSupport support = new DefaultChangeEventSupport(this);
-  PickedState<V> pickedState;
+  MutableSelectedState<V> pickedState;
 
   public PickVertexBehavior(
-      BranchGroup root, Canvas3D canvas, Bounds bounds, PickedState<V> pickedState) {
+      BranchGroup root, Canvas3D canvas, Bounds bounds, MutableSelectedState<V> pickedState) {
     super(root, canvas, bounds);
     this.setSchedulingBounds(bounds);
     this.bounds = bounds;

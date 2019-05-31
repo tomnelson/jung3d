@@ -32,8 +32,8 @@ import edu.uci.ics.jung.layout3d.model.LoadingCacheLayoutModel;
 import edu.uci.ics.jung.layout3d.model.Point;
 import edu.uci.ics.jung.layout3d.util.RandomLocationTransformer;
 import edu.uci.ics.jung.layout3d.util.Spherical;
-import edu.uci.ics.jung.visualization.picking.MultiPickedState;
-import edu.uci.ics.jung.visualization.picking.PickedState;
+import edu.uci.ics.jung.visualization.selection.MultiMutableSelectedState;
+import edu.uci.ics.jung.visualization.selection.MutableSelectedState;
 import edu.uci.ics.jung.visualization.util.ChangeEventSupport;
 import edu.uci.ics.jung.visualization.util.Context;
 import java.awt.BorderLayout;
@@ -100,10 +100,10 @@ public class VisualizationViewer<N, E> extends JPanel
    */
   protected ItemListener pickEventListener;
   /** holds the state of which vertices of the graph are currently 'picked' */
-  protected PickedState<N> pickedVertexState;
+  protected MutableSelectedState<N> pickedVertexState;
 
   /** holds the state of which edges of the graph are currently 'picked' */
-  protected PickedState<EndpointPair<N>> pickedEdgeState;
+  protected MutableSelectedState<EndpointPair<N>> pickedEdgeState;
 
   protected RenderContext<N, EndpointPair<N>> renderContext =
       new PluggableRenderContext<N, EndpointPair<N>>();
@@ -123,14 +123,14 @@ public class VisualizationViewer<N, E> extends JPanel
 
     this.layoutModel = createLayoutModel(network.asGraph());
 
-    renderContext.setPickedVertexState(new MultiPickedState<>());
-    renderContext.setPickedEdgeState(new MultiPickedState<>());
+    renderContext.setPickedVertexState(new MultiMutableSelectedState<>());
+    renderContext.setPickedEdgeState(new MultiMutableSelectedState<>());
     renderContext.setVertexStringer(Object::toString);
     GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
     final Canvas3D c = new Canvas3D(config);
     add(c, BorderLayout.CENTER);
-    setPickedVertexState(new MultiPickedState<N>());
-    setPickedEdgeState(new MultiPickedState<EndpointPair<N>>());
+    setPickedVertexState(new MultiMutableSelectedState<N>());
+    setPickedEdgeState(new MultiMutableSelectedState<EndpointPair<N>>());
 
     // Create a SpringGraph scene and attach it to the virtual universe
     BranchGroup scene = createSceneGraph(c);
@@ -323,7 +323,7 @@ public class VisualizationViewer<N, E> extends JPanel
           for (N v : network.nodes()) {
             VertexGroup<N> vg = nodeMap.get(v);
             Appearance alook = redLook;
-            if (renderContext.getPickedVertexState().isPicked(v)) {
+            if (renderContext.getPickedVertexState().isSelected(v)) {
               alook = yellowLook;
             }
             Node node = vg.getShape();
@@ -517,7 +517,7 @@ public class VisualizationViewer<N, E> extends JPanel
     }
   }
 
-  public void setPickedVertexState(PickedState<N> pickedVertexState) {
+  public void setPickedVertexState(MutableSelectedState<N> pickedVertexState) {
     if (pickEventListener != null && this.pickedVertexState != null) {
       this.pickedVertexState.removeItemListener(pickEventListener);
     }
@@ -530,9 +530,9 @@ public class VisualizationViewer<N, E> extends JPanel
   }
 
   /* (non-Javadoc)
-   * @see edu.uci.ics.jung.visualization.VisualizationServer#setPickedEdgeState(edu.uci.ics.jung.visualization.picking.PickedState)
+   * @see edu.uci.ics.jung.visualization.VisualizationServer#setPickedEdgeState(edu.uci.ics.jung.visualization.picking.SelectedState)
    */
-  public void setPickedEdgeState(PickedState<EndpointPair<N>> pickedEdgeState) {
+  public void setPickedEdgeState(MutableSelectedState<EndpointPair<N>> pickedEdgeState) {
     if (pickEventListener != null && this.pickedEdgeState != null) {
       this.pickedEdgeState.removeItemListener(pickEventListener);
     }

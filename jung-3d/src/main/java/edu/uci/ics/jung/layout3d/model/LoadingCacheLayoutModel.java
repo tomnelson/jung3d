@@ -3,7 +3,7 @@ package edu.uci.ics.jung.layout3d.model;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import edu.uci.ics.jung.layout.util.Caching;
+import edu.uci.ics.jung.visualization.util.Caching;
 import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

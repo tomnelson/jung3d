@@ -30,22 +30,28 @@ import org.slf4j.LoggerFactory;
 public class TreeLayoutAlgorithm<N> implements LayoutAlgorithm<N> {
 
   private static final Logger log =
-      LoggerFactory.getLogger(edu.uci.ics.jung.layout.algorithms.TreeLayoutAlgorithm.class);
+      LoggerFactory.getLogger(edu.uci.ics.jung.layout3d.algorithms.TreeLayoutAlgorithm.class);
 
   public static class Builder<N> {
-    private int horizontalNodeSpacing = DEFAULT_HORIZONTAL_NODE_SPACING;
-    private int verticalNodeSpacing = DEFAULT_VERTICAL_NODE_SPACING;
+    private int xNodeSpacing = DEFAULT_X_NODE_SPACING;
+    private int yNodeSpacing = DEFAULT_Y_NODE_SPACING;
+    private int zNodeSpacing = DEFAULT_Z_NODE_SPACING;
 
-    public Builder withHorizontalNodeSpacing(int horizontalNodeSpacing) {
-      Preconditions.checkArgument(
-          horizontalNodeSpacing > 0, "horizontalNodeSpacing must be positive");
-      this.horizontalNodeSpacing = horizontalNodeSpacing;
+    public Builder withXNodeSpacing(int xNodeSpacing) {
+      Preconditions.checkArgument(xNodeSpacing > 0, "xNodeSpacing must be positive");
+      this.xNodeSpacing = xNodeSpacing;
       return this;
     }
 
-    public Builder withVerticalNodeSpacing(int verticalNodeSpacing) {
-      Preconditions.checkArgument(verticalNodeSpacing > 0, "verticalNodeSpacing must be positive");
-      this.verticalNodeSpacing = verticalNodeSpacing;
+    public Builder withYNodeSpacing(int yNodeSpacing) {
+      Preconditions.checkArgument(yNodeSpacing > 0, "yNodeSpacing must be positive");
+      this.yNodeSpacing = yNodeSpacing;
+      return this;
+    }
+
+    public Builder withZNodeSpacing(int zNodeSpacing) {
+      Preconditions.checkArgument(zNodeSpacing > 0, "zNodeSpacing must be positive");
+      this.zNodeSpacing = zNodeSpacing;
       return this;
     }
 
@@ -59,38 +65,47 @@ public class TreeLayoutAlgorithm<N> implements LayoutAlgorithm<N> {
   }
 
   protected TreeLayoutAlgorithm(Builder<N> builder) {
-    this(builder.horizontalNodeSpacing, builder.verticalNodeSpacing);
+    this(builder.xNodeSpacing, builder.yNodeSpacing, builder.zNodeSpacing);
   }
 
   /**
    * Creates an instance for the specified graph, X distance, and Y distance.
    *
-   * @param horizontalNodeSpacing the horizontal spacing between adjacent siblings
-   * @param verticalNodeSpacing the vertical spacing between adjacent siblings
+   * @param xNodeSpacing the x spacing between adjacent siblings
+   * @param yNodeSpacing the y spacing between adjacent siblings
+   * @param zNodeSpacing the z spacing between adjacent siblings
    */
-  private TreeLayoutAlgorithm(int horizontalNodeSpacing, int verticalNodeSpacing) {
-    this.horizontalNodeSpacing = horizontalNodeSpacing;
-    this.verticalNodeSpacing = verticalNodeSpacing;
+  private TreeLayoutAlgorithm(int xNodeSpacing, int yNodeSpacing, int zNodeSpacing) {
+    this.xNodeSpacing = xNodeSpacing;
+    this.yNodeSpacing = yNodeSpacing;
+    this.zNodeSpacing = zNodeSpacing;
   }
 
   protected Map<N, Integer> basePositions = new HashMap<>();
 
   protected transient Set<N> alreadyDone = new HashSet<N>();
 
-  /** The default horizontal node spacing. Initialized to 50. */
-  protected static final int DEFAULT_HORIZONTAL_NODE_SPACING = 50;
+  /** The default x node spacing. Initialized to 50. */
+  protected static final int DEFAULT_X_NODE_SPACING = 50;
 
-  /** The default vertical node spacing. Initialized to 50. */
-  protected static final int DEFAULT_VERTICAL_NODE_SPACING = 50;
+  /** The default y node spacing. Initialized to 50. */
+  protected static final int DEFAULT_Y_NODE_SPACING = 50;
 
-  /** The horizontal node spacing. Defaults to {@code DEFAULT_HORIZONTAL_NODE_SPACING}. */
-  protected int horizontalNodeSpacing = DEFAULT_HORIZONTAL_NODE_SPACING;
+  /** The default z node spacing. Initialized to 50. */
+  protected static final int DEFAULT_Z_NODE_SPACING = 50;
 
-  /** The vertical node spacing. Defaults to {@code DEFAULT_VERTICAL_NODE_SPACING}. */
-  protected int verticalNodeSpacing = DEFAULT_VERTICAL_NODE_SPACING;
+  /** The horxizontal node spacing. Defaults to {@code DEFAULT_X_NODE_SPACING}. */
+  protected int xNodeSpacing = DEFAULT_X_NODE_SPACING;
+
+  /** The y node spacing. Defaults to {@code DEFAULT_Y_NODE_SPACING}. */
+  protected int yNodeSpacing = DEFAULT_Y_NODE_SPACING;
+
+  /** The z node spacing. Defaults to {@code DEFAULT_Z_NODE_SPACING}. */
+  protected int zNodeSpacing = DEFAULT_Z_NODE_SPACING;
 
   protected double currentX;
   protected double currentY;
+  protected double currentZ;
 
   @Override
   public void visit(LayoutModel<N> layoutModel) {
@@ -101,33 +116,38 @@ public class TreeLayoutAlgorithm<N> implements LayoutAlgorithm<N> {
     alreadyDone = Sets.newHashSet();
     this.currentX = 0;
     this.currentY = 0;
+    this.currentZ = 0;
     Set<N> roots = TreeUtils.roots(layoutModel.getGraph());
     Preconditions.checkArgument(roots.size() > 0);
-    // the width of the tree under 'roots'. Includes one 'horizontalNodeSpacing' per child node
-    int overallWidth = calculateWidth(layoutModel, roots);
-    // add one additional 'horizontalNodeSpacing' for each tree (each root)
-    overallWidth += (roots.size() + 1) * horizontalNodeSpacing;
-    int overallHeight = calculateHeight(layoutModel, roots);
-    overallHeight += 2 * verticalNodeSpacing;
+    // the width of the tree under 'roots'. Includes one 'xNodeSpacing' per child node
+    int overallWidth = calculateOverallWidth(layoutModel, roots);
+    // add one additional 'xNodeSpacing' for each tree (each root)
+    overallWidth += (roots.size() + 1) * xNodeSpacing;
+    int overallHeight = calculateOverallHeight(layoutModel, roots);
+    overallHeight += 2 * yNodeSpacing;
     int overallDepth = overallWidth;
     layoutModel.setSize(
         Math.max(layoutModel.getWidth(), overallWidth),
         Math.max(layoutModel.getHeight(), overallHeight),
         Math.max(layoutModel.getDepth(), overallDepth));
-    for (N node : roots) {
-      calculateWidth(layoutModel, node);
-      currentX += (this.basePositions.get(node) / 2 + this.horizontalNodeSpacing);
-      buildTree(layoutModel, node, (int) currentX);
+    // for every root in the forest or tree, descend and layout a circle of children in
+    // the x/z plane, centered at the x,y_spacing,z of the root
+    for (N root : roots) {
+      calculateLocalWidth(layoutModel, root);
+      // pass down the center and radius for the circle
+      currentX += (this.basePositions.get(root) / 2 + this.xNodeSpacing);
+      currentZ = currentX;
+      buildTree(layoutModel, root, (int) currentX);
     }
   }
 
   protected void buildTree(LayoutModel<N> layoutModel, N node, int x) {
     if (alreadyDone.add(node)) {
       //go one level further down
-      double newY = this.currentY + this.verticalNodeSpacing;
+      double newY = this.currentY + this.yNodeSpacing;
       this.currentX = x;
       this.currentY = newY;
-      layoutModel.set(node, currentX, currentY, 0);
+      layoutModel.set(node, currentX, currentY, currentZ);
 
       int sizeXofCurrent = basePositions.get(node);
 
@@ -141,51 +161,52 @@ public class TreeLayoutAlgorithm<N> implements LayoutAlgorithm<N> {
         startXofChild = lastX + sizeXofChild / 2;
         buildTree(layoutModel, element, startXofChild);
 
-        lastX = lastX + sizeXofChild + horizontalNodeSpacing;
+        lastX = lastX + sizeXofChild + xNodeSpacing;
       }
 
-      this.currentY -= this.verticalNodeSpacing;
+      this.currentY -= this.yNodeSpacing;
     }
   }
 
-  private int calculateWidth(LayoutModel<N> layoutModel, N node) {
+  private int calculateLocalWidth(LayoutModel<N> layoutModel, N node) {
 
-    int size = 0;
+    int localWidth = 0;
     for (N element : layoutModel.getGraph().successors(node)) {
-      size += calculateWidth(layoutModel, element) + horizontalNodeSpacing;
+      localWidth += calculateLocalWidth(layoutModel, element) + xNodeSpacing;
     }
-    size = Math.max(0, size - horizontalNodeSpacing);
-    basePositions.put(node, size);
+    localWidth = Math.max(0, localWidth - xNodeSpacing);
+    basePositions.put(node, localWidth);
 
-    return size;
+    return localWidth;
   }
 
-  private int calculateWidth(LayoutModel<N> layoutModel, Collection<N> roots) {
+  private int calculateOverallWidth(LayoutModel<N> layoutModel, Collection<N> roots) {
 
-    int size = 0;
+    int overallWidth = 0;
     for (N node : roots) {
-      size += calculateWidth(layoutModel, node);
+      overallWidth += calculateLocalWidth(layoutModel, node);
     }
 
-    return size;
+    return overallWidth;
   }
 
-  private int calculateHeight(LayoutModel<N> layoutModel, N node) {
+  private int calculateLocalHeight(LayoutModel<N> layoutModel, N node) {
 
-    int size = 0;
+    int localHeight = 0;
     for (N element : layoutModel.getGraph().successors(node)) {
-      size = Math.max(size, calculateHeight(layoutModel, element) + verticalNodeSpacing);
+      localHeight =
+          Math.max(localHeight, calculateLocalHeight(layoutModel, element) + yNodeSpacing);
     }
-    return size;
+    return localHeight;
   }
 
-  private int calculateHeight(LayoutModel<N> layoutModel, Collection<N> roots) {
+  private int calculateOverallHeight(LayoutModel<N> layoutModel, Collection<N> roots) {
 
-    int size = 0;
+    int overallHeight = 0;
     for (N node : roots) {
-      size += calculateHeight(layoutModel, node);
+      overallHeight += calculateLocalHeight(layoutModel, node);
     }
-    return size;
+    return overallHeight;
   }
 
   /** @return the center of this layout's area. */
