@@ -1,7 +1,7 @@
 <?xml version="1.0"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
 	  <artifactId>jung-3d-parent</artifactId>
-    <groupId>net.sf.jung</groupId>
+    <groupId>com.github.tomnelson</groupId>
     <version>3.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -103,32 +103,32 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+	<!--<dependency>-->
+		<!--<groupId>net.sf.jung</groupId>-->
+		<!--<artifactId>jung-api</artifactId>-->
+		<!--<version>${project.version}</version>-->
+		<!--<scope>compile</scope>-->
+	<!--</dependency>-->
+	<!--<dependency>-->
+		<!--<groupId>net.sf.jung</groupId>-->
+		<!--<artifactId>jung-algorithms</artifactId>-->
+		<!--<version>${project.version}</version>-->
+		<!--<scope>compile</scope>-->
+	<!--</dependency>-->
 	<dependency>
-		<groupId>net.sf.jung</groupId>
-		<artifactId>jung-api</artifactId>
+		<groupId>com.github.tomnelson</groupId>
+		<artifactId>jung-visualization-samples</artifactId>
 		<version>${project.version}</version>
 		<scope>compile</scope>
 	</dependency>
+	<!--<dependency>-->
+		<!--<groupId>net.sf.jung</groupId>-->
+		<!--<artifactId>jung-graph-impl</artifactId>-->
+		<!--<version>${project.version}</version>-->
+		<!--<scope>compile</scope>-->
+	<!--</dependency>-->
 	<dependency>
-		<groupId>net.sf.jung</groupId>
-		<artifactId>jung-algorithms</artifactId>
-		<version>${project.version}</version>
-		<scope>compile</scope>
-	</dependency>
-	<dependency>
-		<groupId>net.sf.jung</groupId>
-		<artifactId>jung-visualization</artifactId>
-		<version>${project.version}</version>
-		<scope>compile</scope>
-	</dependency>
-	<dependency>
-		<groupId>net.sf.jung</groupId>
-		<artifactId>jung-graph-impl</artifactId>
-		<version>${project.version}</version>
-		<scope>compile</scope>
-	</dependency>
-	<dependency>
-		<groupId>net.sf.jung</groupId>
+		<groupId>com.github.tomnelson</groupId>
 		<artifactId>jung-3d</artifactId>
 		<version>${project.version}</version>
 		<scope>compile</scope>

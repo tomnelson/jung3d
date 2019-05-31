@@ -11,7 +11,6 @@ package edu.uci.ics.jung.samples;
 
 /** */
 import com.google.common.graph.Network;
-import edu.uci.ics.jung.graph.util.TestGraphs;
 import edu.uci.ics.jung.layout3d.algorithms.FRLayoutAlgorithm;
 import edu.uci.ics.jung.layout3d.algorithms.ISOMLayoutAlgorithm;
 import edu.uci.ics.jung.layout3d.algorithms.KKLayoutAlgorithm;
@@ -21,6 +20,7 @@ import edu.uci.ics.jung.layout3d.algorithms.SpringLayoutAlgorithm;
 import edu.uci.ics.jung.layout3d.algorithms.repulsion.BarnesHutFRRepulsion;
 import edu.uci.ics.jung.layout3d.algorithms.repulsion.BarnesHutSpringRepulsion;
 import edu.uci.ics.jung.layout3d.util.LayoutAlgorithmTransition;
+import edu.uci.ics.jung.samples.util.TestGraphs;
 import edu.uci.ics.jung.visualization3d.VisualizationViewer;
 import java.awt.*;
 import java.awt.event.ItemEvent;
