@@ -12,7 +12,7 @@
   Demo programs for java3d based graph rendering project
   </description>
 	<properties>
-		<version.log4j>2.9.1</version.log4j>
+		<version.log4j>2.13.3</version.log4j>
 	</properties>
 
 	<profiles>
